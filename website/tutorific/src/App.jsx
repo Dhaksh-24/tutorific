@@ -216,7 +216,6 @@ tbody tr:hover{background:rgba(11,29,51,.02)}
 .lead-card .lc-meta{display:flex;align-items:center;justify-content:space-between}
 .lead-card .lc-days{font-size:.7rem;color:var(--muted)}
 .remind-dot{width:8px;height:8px;border-radius:50%;background:#e84040;position:absolute;top:10px;right:10px}
-
 .crm-detail{background:#fff;border-radius:var(--r);border:1px solid var(--border);display:flex;flex-direction:column;height:fit-content;position:sticky;top:80px}
 .cd-top{padding:1.5rem;border-bottom:1px solid var(--border)}
 .cd-avatar{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;color:#fff;margin-bottom:1rem}
@@ -249,26 +248,38 @@ tbody tr:hover{background:rgba(11,29,51,.02)}
 .tl-body .t{font-size:.83rem;font-weight:600;color:var(--text);margin-bottom:.15rem}
 .tl-body .s{font-size:.77rem;color:var(--muted);line-height:1.5}
 .tl-body .ts{font-size:.7rem;color:var(--muted);margin-top:.2rem}
-
 .log-form{padding:1.25rem 1.5rem;border-top:1px solid var(--border);background:var(--bg)}
 .log-tabs{display:flex;gap:.4rem;margin-bottom:.85rem}
 .log-tab{padding:.3rem .75rem;border-radius:100px;font-size:.72rem;font-weight:700;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .18s}
 .log-tab.act{background:var(--navy);color:#fff;border-color:var(--navy)}
 .log-input{width:100%;padding:.6rem .85rem;border:1.5px solid var(--border);border-radius:8px;font-family:'Outfit',sans-serif;font-size:.82rem;background:#fff;color:var(--text);margin-bottom:.65rem;resize:none}
 .log-input:focus{outline:none;border-color:var(--gold)}
-
 .remind-panel{background:rgba(232,64,64,.05);border:1px solid rgba(232,64,64,.15);border-radius:8px;padding:.85rem;margin-top:.6rem}
 .remind-panel .rl{font-size:.75rem;font-weight:700;color:#a02020;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem}
-
 .crm-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:3rem;text-align:center;color:var(--muted)}
 .crm-empty .big{font-size:2.5rem;margin-bottom:.75rem}
 .crm-empty p{font-size:.88rem;line-height:1.65;max-width:220px}
-
 .search-bar{display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem}
 .search-bar input{flex:1;padding:.65rem 1rem;border:1.5px solid var(--border);border-radius:8px;font-family:'Outfit',sans-serif;font-size:.85rem;background:#fff;color:var(--text);transition:border-color .2s}
 .search-bar input:focus{outline:none;border-color:var(--gold)}
 .filter-pill{padding:.38rem .9rem;border-radius:100px;font-size:.75rem;font-weight:600;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .18s;white-space:nowrap}
 .filter-pill.act{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+/* TUTOR PORTAL */
+.attend-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1rem;border-radius:8px;background:var(--bg);margin-bottom:.6rem;transition:background .15s}
+.attend-toggle-row:hover{background:var(--bg2)}
+.attend-toggle-row .sname{font-weight:600;font-size:.9rem;color:var(--text)}
+.attend-toggle-row .sdetail{font-size:.77rem;color:var(--muted);margin-top:.1rem}
+.toggle-group{display:flex;gap:.4rem}
+.tog{padding:.38rem .9rem;border-radius:6px;font-size:.78rem;font-weight:700;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s}
+.tog.present{background:rgba(13,122,95,.12);color:var(--teal);border-color:rgba(13,122,95,.25)}
+.tog.absent{background:rgba(200,40,40,.1);color:#a02020;border-color:rgba(200,40,40,.2)}
+.tog.late{background:rgba(201,149,11,.1);color:var(--gold);border-color:rgba(201,149,11,.2)}
+.earn-card{background:#fff;border-radius:var(--r);border:1px solid var(--border);padding:1.4rem;position:relative;overflow:hidden}
+.earn-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.earn-card.green::before{background:var(--teal)}
+.earn-card.gold::before{background:var(--gold)}
+.earn-card.navy::before{background:var(--navy)}
 
 /* MISC */
 .live-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);display:inline-block;animation:pulse 1.5s infinite}
@@ -306,6 +317,7 @@ const nowTime = () => { const d=new Date(); return d.getHours().toString().padSt
 const initials = n => n.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
 const avatarColor = n => { const c=["#0b5a3f","#1a3456","#7a4000","#5030a0","#a02020","#0d4a7a"]; let h=0; for(let i=0;i<n.length;i++)h=n.charCodeAt(i)+((h<<5)-h); return c[Math.abs(h)%c.length]; };
 const daysSince = d => { const now=new Date("2026-03-19"); const then=new Date(d); return Math.floor((now-then)/(1000*60*60*24)); };
+const fmtGBP = n => `£${n.toFixed(2).replace(/\.00$/,"")}`;
 
 // ─── seed data ─────────────────────────────────────────────
 const INIT_STUDENTS = [
@@ -319,11 +331,15 @@ const INIT_STUDENTS = [
 ];
 
 const INIT_SESSIONS = [
-  {id:101,studentId:1,date:"15",month:"Mar",time:"15:00",subj:"Mathematics",topic:"Quadratic Equations",tutor:"Mr. Ahmed",meet:"https://meet.google.com/abc-defg-hij",attendState:null},
-  {id:102,studentId:1,date:"17",month:"Mar",time:"16:00",subj:"English Literature",topic:"Romeo & Juliet",tutor:"Ms. Clarke",meet:"https://meet.google.com/bcd-efgh-ijk",attendState:null},
-  {id:103,studentId:1,date:"19",month:"Mar",time:"15:30",subj:"Mathematics",topic:"Trigonometry",tutor:"Mr. Ahmed",meet:"https://meet.google.com/cde-fghi-jkl",attendState:null},
-  {id:104,studentId:2,date:"15",month:"Mar",time:"14:00",subj:"English",topic:"Language Analysis",tutor:"Ms. Clarke",meet:"https://meet.google.com/def-ghij-klm",attendState:null},
-  {id:105,studentId:3,date:"16",month:"Mar",time:"16:30",subj:"Science",topic:"Atomic Structure",tutor:"Dr. Patel",meet:"https://meet.google.com/efg-hijk-lmn",attendState:null},
+  {id:101,studentId:1,studentName:"Emma Johnson",date:"15",month:"Mar",time:"15:00",subj:"Mathematics",topic:"Quadratic Equations",tutor:"Mr. Ahmed",tutorId:"tutor-ahmed",meet:"https://meet.google.com/abc-defg-hij",attendState:null,durationHours:1},
+  {id:102,studentId:1,studentName:"Emma Johnson",date:"17",month:"Mar",time:"16:00",subj:"English Literature",topic:"Romeo & Juliet",tutor:"Ms. Clarke",tutorId:"tutor-clarke",meet:"https://meet.google.com/bcd-efgh-ijk",attendState:null,durationHours:1},
+  {id:103,studentId:1,studentName:"Emma Johnson",date:"19",month:"Mar",time:"15:30",subj:"Mathematics",topic:"Trigonometry",tutor:"Mr. Ahmed",tutorId:"tutor-ahmed",meet:"https://meet.google.com/cde-fghi-jkl",attendState:null,durationHours:1},
+  {id:104,studentId:2,studentName:"James Okafor",date:"15",month:"Mar",time:"14:00",subj:"English",topic:"Language Analysis",tutor:"Ms. Clarke",tutorId:"tutor-clarke",meet:"https://meet.google.com/def-ghij-klm",attendState:null,durationHours:1},
+  {id:105,studentId:3,studentName:"Priya Sharma",date:"16",month:"Mar",time:"16:30",subj:"Science",topic:"Atomic Structure",tutor:"Dr. Patel",tutorId:"tutor-patel",meet:"https://meet.google.com/efg-hijk-lmn",attendState:null,durationHours:1},
+  {id:106,studentId:4,studentName:"Liam Williams",date:"18",month:"Mar",time:"17:00",subj:"A-Level Maths",topic:"Integration by Parts",tutor:"Mr. Ahmed",tutorId:"tutor-ahmed",meet:"https://meet.google.com/fgh-ijkl-mno",attendState:"P",durationHours:1.5,joinedAt:"17:02"},
+  {id:107,studentId:7,studentName:"Zara Ahmed",date:"17",month:"Mar",time:"10:00",subj:"KS3 Maths",topic:"Algebra Basics",tutor:"Mr. Ahmed",tutorId:"tutor-ahmed",meet:"https://meet.google.com/ghi-jklm-nop",attendState:"A",durationHours:1},
+  {id:108,studentId:5,studentName:"Amelia Davis",date:"16",month:"Mar",time:"11:00",subj:"11+ Prep",topic:"Verbal Reasoning",tutor:"Ms. Clarke",tutorId:"tutor-clarke",meet:"https://meet.google.com/hij-klmn-opq",attendState:"P",durationHours:1,joinedAt:"11:03"},
+  {id:109,studentId:6,studentName:"Noah Patel",date:"15",month:"Mar",time:"13:00",subj:"GCSE Science",topic:"Forces & Motion",tutor:"Dr. Patel",tutorId:"tutor-patel",meet:"https://meet.google.com/ijk-lmno-pqr",attendState:"L",durationHours:1,joinedAt:"13:12"},
 ];
 
 const PAST_ATTEND = {
@@ -346,11 +362,19 @@ const PAYMENTS_INIT = [
   {id:7,studentId:7,student:"Zara Ahmed",parent:"Fatima Ahmed",amount:95,due:"01 Mar",paid:"—",status:"Pending"},
 ];
 
-const TUTORS = [
-  {id:1,name:"Mr. Ahmed",subjects:"Maths",sessions:16,rate:28,invoiced:448,paid:280,owed:168},
-  {id:2,name:"Ms. Clarke",subjects:"English, 11+",sessions:12,rate:28,invoiced:336,paid:336,owed:0},
-  {id:3,name:"Dr. Patel",subjects:"Science",sessions:10,rate:32,invoiced:320,paid:160,owed:160},
+// Tutor accounts — tutorId matches session.tutorId
+const TUTORS_AUTH = [
+  {id:"tutor-ahmed", name:"Mr. Ahmed", email:"ahmed@tutorific.co.uk", pass:"Ahmed-2024-T", subject:"Maths", ratePerHour:28},
+  {id:"tutor-clarke", name:"Ms. Clarke", email:"clarke@tutorific.co.uk", pass:"Clarke-2024-T", subject:"English, 11+", ratePerHour:28},
+  {id:"tutor-patel", name:"Dr. Patel", email:"patel@tutorific.co.uk", pass:"Patel-2024-T", subject:"Science", ratePerHour:32},
 ];
+
+// Historical tutor payment records (invoiced vs paid)
+const TUTOR_PAYMENTS_INIT = {
+  "tutor-ahmed": [{month:"Jan 2026",sessions:6,invoiced:168,status:"Paid"},{month:"Feb 2026",sessions:8,invoiced:224,status:"Paid"},{month:"Mar 2026",sessions:5,invoiced:140,status:"Pending"}],
+  "tutor-clarke": [{month:"Jan 2026",sessions:5,invoiced:140,status:"Paid"},{month:"Feb 2026",sessions:6,invoiced:168,status:"Paid"},{month:"Mar 2026",sessions:4,invoiced:112,status:"Paid"}],
+  "tutor-patel":  [{month:"Jan 2026",sessions:4,invoiced:128,status:"Paid"},{month:"Feb 2026",sessions:5,invoiced:160,status:"Pending"},{month:"Mar 2026",sessions:3,invoiced:96,status:"Pending"}],
+};
 
 const MATERIALS = {
   Maths:[{name:"Quadratic Equations — Full Notes",type:"PDF",size:"1.2 MB",added:"12 Mar"},{name:"Algebra Revision Worksheet",type:"PDF",size:"840 KB",added:"8 Mar"},{name:"Past Paper — GCSE Maths 2024 P1",type:"PDF",size:"2.1 MB",added:"5 Mar"},{name:"Lesson Recording — Surds & Indices",type:"VID",size:"145 MB",added:"1 Mar"}],
@@ -365,45 +389,20 @@ const STAGE_DOTS = {Lead:"#7030c0",Trial:"var(--gold)",Active:"var(--teal)",Chur
 
 const INIT_LEADS = [
   {id:201,name:"Sophie Williams",parent:"Mark Williams",email:"mark.williams@email.com",phone:"07700 900123",stage:"Lead",subject:"GCSE Maths",year:"Yr 10",source:"Contact Form",date:"2026-03-17",reminder:null,
-   timeline:[
-     {type:"enq",text:"Enquiry received via contact form",detail:"Interested in GCSE Maths support. Struggling with algebra and needs help before mocks.",ts:"17 Mar, 10:42am"},
-   ]},
+   timeline:[{type:"enq",text:"Enquiry received via contact form",detail:"Interested in GCSE Maths support. Struggling with algebra and needs help before mocks.",ts:"17 Mar, 10:42am"}]},
   {id:202,name:"Ben Thornton",parent:"Claire Thornton",email:"claire.thornton@email.com",phone:"07700 900456",stage:"Lead",subject:"11+ Prep",year:"Yr 5",source:"Contact Form",date:"2026-03-16",reminder:"2026-03-21",
-   timeline:[
-     {type:"enq",text:"Enquiry received via contact form",detail:"Looking for 11+ preparation, sitting exams in September.",ts:"16 Mar, 2:15pm"},
-     {type:"remind",text:"Follow-up reminder set",detail:"Call Claire on 21 March to discuss trial session.",ts:"16 Mar, 3:00pm"},
-   ]},
+   timeline:[{type:"enq",text:"Enquiry received via contact form",detail:"Looking for 11+ preparation, sitting exams in September.",ts:"16 Mar, 2:15pm"},{type:"remind",text:"Follow-up reminder set",detail:"Call Claire on 21 March to discuss trial session.",ts:"16 Mar, 3:00pm"}]},
   {id:203,name:"Isla Henderson",parent:"Greg Henderson",email:"greg.henderson@email.com",phone:"07700 900789",stage:"Trial",subject:"A-Level Chemistry",year:"Yr 12",source:"Instagram",date:"2026-03-10",reminder:null,
-   timeline:[
-     {type:"enq",text:"Enquiry via Instagram DM",detail:"Struggling with organic chemistry. Would like to try a session.",ts:"10 Mar, 11:00am"},
-     {type:"note",text:"Call logged",detail:"Spoke with Greg for 12 mins. Trial booked for 20 March with Dr. Patel.",ts:"11 Mar, 4:30pm"},
-     {type:"email",text:"Email sent",detail:"Welcome email sent with trial session details and Google Meet link.",ts:"11 Mar, 4:35pm"},
-   ]},
+   timeline:[{type:"enq",text:"Enquiry via Instagram DM",detail:"Struggling with organic chemistry. Would like to try a session.",ts:"10 Mar, 11:00am"},{type:"note",text:"Call logged",detail:"Spoke with Greg for 12 mins. Trial booked for 20 March with Dr. Patel.",ts:"11 Mar, 4:30pm"},{type:"email",text:"Email sent",detail:"Welcome email sent with trial session details and Google Meet link.",ts:"11 Mar, 4:35pm"}]},
   {id:204,name:"Marcus Cole",parent:"Diane Cole",email:"diane.cole@email.com",phone:"07700 900321",stage:"Trial",subject:"GCSE English",year:"Yr 11",source:"Referral",date:"2026-03-08",reminder:"2026-03-22",
-   timeline:[
-     {type:"enq",text:"Referred by Emma Johnson's family",detail:"Needs help with English Literature — Romeo & Juliet and An Inspector Calls.",ts:"8 Mar, 9:20am"},
-     {type:"email",text:"Email sent",detail:"Introduction email with pricing and course overview.",ts:"8 Mar, 10:00am"},
-     {type:"note",text:"Trial session completed",detail:"Ms. Clarke reported Marcus engaged well. Keen to continue. Follow up with Diane.",ts:"15 Mar, 5:10pm"},
-     {type:"remind",text:"Follow-up reminder set",detail:"Chase Diane re: enrolment decision by 22 March.",ts:"15 Mar, 5:12pm"},
-   ]},
+   timeline:[{type:"enq",text:"Referred by Emma Johnson's family",detail:"Needs help with English Literature.",ts:"8 Mar, 9:20am"},{type:"email",text:"Email sent",detail:"Introduction email with pricing and course overview.",ts:"8 Mar, 10:00am"},{type:"note",text:"Trial session completed",detail:"Ms. Clarke reported Marcus engaged well.",ts:"15 Mar, 5:10pm"},{type:"remind",text:"Follow-up reminder set",detail:"Chase Diane re: enrolment decision by 22 March.",ts:"15 Mar, 5:12pm"}]},
   {id:205,name:"Freya Booth",parent:"Neil Booth",email:"neil.booth@email.com",phone:"07700 900654",stage:"Active",subject:"KS3 Science",year:"Yr 8",source:"Facebook",date:"2026-02-20",reminder:null,
-   timeline:[
-     {type:"enq",text:"Enquiry via Facebook",detail:"Neil saw our Facebook post about KS3 Science support.",ts:"20 Feb, 1:05pm"},
-     {type:"note",text:"Call logged",detail:"Brief intro call, 8 mins. Freya is in Year 8, struggling with forces and energy.",ts:"21 Feb, 10:00am"},
-     {type:"stage",text:"Stage updated: Trial",detail:"Trial session booked with Dr. Patel.",ts:"25 Feb, 3:30pm"},
-     {type:"stage",text:"Stage updated: Active",detail:"Enrolled as full student. Monthly fee £95.",ts:"4 Mar, 9:00am"},
-     {type:"email",text:"Welcome email sent",detail:"Login credentials and portal access sent to neil.booth@email.com.",ts:"4 Mar, 9:02am"},
-   ]},
+   timeline:[{type:"enq",text:"Enquiry via Facebook",detail:"Neil saw our Facebook post.",ts:"20 Feb, 1:05pm"},{type:"stage",text:"Stage updated: Active",detail:"Enrolled. Fee £95/month.",ts:"4 Mar, 9:00am"}]},
   {id:206,name:"Oliver Reed",parent:"Julia Reed",email:"julia.reed@email.com",phone:"07700 900987",stage:"Churned",subject:"GCSE Maths",year:"Yr 11",source:"Contact Form",date:"2026-01-15",reminder:null,
-   timeline:[
-     {type:"enq",text:"Enquiry via contact form",detail:"Looking for GCSE Maths help.",ts:"15 Jan, 3:00pm"},
-     {type:"stage",text:"Stage updated: Active",detail:"Enrolled. Fee £120/month.",ts:"22 Jan, 10:00am"},
-     {type:"note",text:"Note logged",detail:"Julia called to say Oliver has found a local tutor. Cancelling effective end of February.",ts:"24 Feb, 2:15pm"},
-     {type:"stage",text:"Stage updated: Churned",detail:"Student cancelled — found local in-person tutor.",ts:"28 Feb, 9:00am"},
-   ]},
+   timeline:[{type:"enq",text:"Enquiry via contact form",detail:"Looking for GCSE Maths help.",ts:"15 Jan, 3:00pm"},{type:"stage",text:"Stage updated: Churned",detail:"Student cancelled — found local in-person tutor.",ts:"28 Feb, 9:00am"}]},
 ];
 
-// ─── CRM module ────────────────────────────────────────────
+// ─── CRM panel ─────────────────────────────────────────────
 function CRMPanel({leads,setLeads,onConvertToStudent}) {
   const [selected,setSelected]=useState(null);
   const [search,setSearch]=useState("");
@@ -412,200 +411,92 @@ function CRMPanel({leads,setLeads,onConvertToStudent}) {
   const [logText,setLogText]=useState("");
   const [reminderDate,setReminderDate]=useState("");
   const [emailSubj,setEmailSubj]=useState("");
-  const [emailBody,setEmailBody]=useState("");
 
   const lead = selected ? leads.find(l=>l.id===selected) : null;
-
   const filtered = leads.filter(l=>{
     const matchStage = filterStage==="All" || l.stage===filterStage;
     const q = search.toLowerCase();
     const matchSearch = !q || l.name.toLowerCase().includes(q) || l.parent.toLowerCase().includes(q) || l.subject.toLowerCase().includes(q);
     return matchStage && matchSearch;
   });
-
   const byStage = stage => filtered.filter(l=>l.stage===stage);
-
   const updateLead = (id,patch) => setLeads(prev=>prev.map(l=>l.id===id?{...l,...patch}:l));
-
-  const addTimeline = (id,entry) => {
-    setLeads(prev=>prev.map(l=>l.id===id?{...l,timeline:[...l.timeline,entry]}:l));
-  };
-
-  const changeStage = (id,stage) => {
-    const ts = new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short"})+", "+nowTime();
-    updateLead(id,{stage});
-    addTimeline(id,{type:"stage",text:`Stage updated: ${stage}`,detail:`Manually moved to ${stage}.`,ts});
-  };
-
+  const addTimeline = (id,entry) => setLeads(prev=>prev.map(l=>l.id===id?{...l,timeline:[...l.timeline,entry]}:l));
+  const changeStage = (id,stage) => { const ts=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short"})+", "+nowTime(); updateLead(id,{stage}); addTimeline(id,{type:"stage",text:`Stage updated: ${stage}`,detail:`Manually moved to ${stage}.`,ts}); };
   const logNote = () => {
     if(!logText.trim()||!lead) return;
-    const ts = new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short"})+", "+nowTime();
-    if(logTab==="note") {
-      addTimeline(lead.id,{type:"note",text:"Note logged",detail:logText,ts});
-    } else if(logTab==="email") {
-      addTimeline(lead.id,{type:"email",text:`Email sent: ${emailSubj||"(no subject)"}`,detail:logText,ts});
-    } else if(logTab==="remind") {
-      updateLead(lead.id,{reminder:reminderDate});
-      addTimeline(lead.id,{type:"remind",text:`Follow-up reminder set`,detail:`${logText} — Due: ${reminderDate||"(no date)"}`,ts});
-    }
+    const ts=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short"})+", "+nowTime();
+    if(logTab==="note") addTimeline(lead.id,{type:"note",text:"Note logged",detail:logText,ts});
+    else if(logTab==="email") addTimeline(lead.id,{type:"email",text:`Email sent: ${emailSubj||"(no subject)"}`,detail:logText,ts});
+    else if(logTab==="remind") { updateLead(lead.id,{reminder:reminderDate}); addTimeline(lead.id,{type:"remind",text:"Follow-up reminder set",detail:`${logText} — Due: ${reminderDate||"(no date)"}`,ts}); }
     setLogText(""); setEmailSubj(""); setReminderDate("");
   };
-
   const handleConvert = (lead) => {
-    const confirmed = window.confirm(`Convert ${lead.name} to an active student? This will create their account and add them to the Students page.`);
+    const confirmed = window.confirm(`Convert ${lead.name} to an active student?`);
     if(!confirmed) return;
-    const pw = genPw();
-    const email = genEmail(lead.name);
-    const newStudent = {
-      id:Date.now(), name:lead.name, year:lead.year||"Yr 10",
-      subject:lead.subject, tutor:"Mr. Ahmed",
-      parent:lead.parent, parentEmail:lead.email,
-      fee:120, email,
-    };
+    const pw=genPw(), email=genEmail(lead.name);
+    const newStudent={id:Date.now(),name:lead.name,year:lead.year||"Yr 10",subject:lead.subject,tutor:"Mr. Ahmed",parent:lead.parent,parentEmail:lead.email,fee:120,email};
     onConvertToStudent(newStudent);
     changeStage(lead.id,"Active");
-    const ts = new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short"})+", "+nowTime();
-    addTimeline(lead.id,{type:"email",text:"Account created & credentials emailed",detail:`Login: ${email} / ${pw} — sent to ${lead.email}`,ts});
-    alert(`✅ ${lead.name} converted to active student!\n\nCredentials emailed to ${lead.email}:\nEmail: ${email}\nPassword: ${pw}`);
+    const ts=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short"})+", "+nowTime();
+    addTimeline(lead.id,{type:"email",text:"Account created & credentials emailed",detail:`Login: ${email} / ${pw}`,ts});
+    alert(`✅ ${lead.name} converted!\n\nEmail: ${email}\nPassword: ${pw}`);
   };
-
-  const tIconClass = t => t==="note"?"tl-note":t==="email"?"tl-email":t==="stage"?"tl-stage":t==="remind"?"tl-remind":"tl-enq";
-  const tIconEmoji = t => t==="note"?"📝":t==="email"?"📧":t==="stage"?"🔀":t==="remind"?"🔔":"📩";
-
-  const hasReminder = l => !!l.reminder;
-  const newLeadsToday = leads.filter(l=>daysSince(l.date)===0).length;
+  const tIconClass=t=>t==="note"?"tl-note":t==="email"?"tl-email":t==="stage"?"tl-stage":t==="remind"?"tl-remind":"tl-enq";
+  const tIconEmoji=t=>t==="note"?"📝":t==="email"?"📧":t==="stage"?"🔀":t==="remind"?"🔔":"📩";
 
   return (
     <div>
-      {/* stats */}
       <div className="stat-grid" style={{marginBottom:"1.5rem"}}>
-        {[
-          {l:"Total Contacts",v:leads.length,h:"All stages",c:"hint"},
-          {l:"Active Leads",v:leads.filter(l=>l.stage==="Lead").length,h:"Awaiting contact",c:"hinta"},
-          {l:"In Trial",v:leads.filter(l=>l.stage==="Trial").length,h:"Deciding",c:"hinta"},
-          {l:"New Today",v:newLeadsToday,h:"From contact form",c:"hint"},
-        ].map(s=><div className="sb2" key={s.l}><div className="lbl">{s.l}</div><div className="val">{s.v}</div><div className={s.c}>{s.h}</div></div>)}
+        {[{l:"Total Contacts",v:leads.length,h:"All stages",c:"hint"},{l:"Active Leads",v:leads.filter(l=>l.stage==="Lead").length,h:"Awaiting contact",c:"hinta"},{l:"In Trial",v:leads.filter(l=>l.stage==="Trial").length,h:"Deciding",c:"hinta"},{l:"New Today",v:0,h:"From contact form",c:"hint"}].map(s=><div className="sb2" key={s.l}><div className="lbl">{s.l}</div><div className="val">{s.v}</div><div className={s.c}>{s.h}</div></div>)}
       </div>
-
-      {/* search + filter */}
       <div className="search-bar">
         <input placeholder="Search by name, parent, or subject..." value={search} onChange={e=>setSearch(e.target.value)}/>
-        {["All",...STAGE_ORDER].map(s=>(
-          <button key={s} className={`filter-pill${filterStage===s?" act":""}`} onClick={()=>setFilterStage(s)}>{s}</button>
-        ))}
+        {["All",...STAGE_ORDER].map(s=><button key={s} className={`filter-pill${filterStage===s?" act":""}`} onClick={()=>setFilterStage(s)}>{s}</button>)}
       </div>
-
       <div className="crm-wrap">
-        {/* pipeline */}
         <div>
           <div className="pipeline">
             {STAGE_ORDER.map(stage=>(
               <div className="pipeline-col" key={stage}>
-                <div className="pc-head">
-                  <div className="pc-label" style={{color:STAGE_DOTS[stage]}}>{stage}</div>
-                  <div className="pc-count">{byStage(stage).length}</div>
-                </div>
-                {byStage(stage).length===0&&(
-                  <div style={{textAlign:"center",padding:"1.5rem .5rem",color:"var(--muted)",fontSize:".78rem"}}>No contacts</div>
-                )}
+                <div className="pc-head"><div className="pc-label" style={{color:STAGE_DOTS[stage]}}>{stage}</div><div className="pc-count">{byStage(stage).length}</div></div>
+                {byStage(stage).length===0&&<div style={{textAlign:"center",padding:"1.5rem .5rem",color:"var(--muted)",fontSize:".78rem"}}>No contacts</div>}
                 {byStage(stage).map(l=>(
                   <div key={l.id} className={`lead-card${selected===l.id?" selected":""}`} onClick={()=>setSelected(l.id)}>
-                    {hasReminder(l)&&<div className="remind-dot" title="Reminder set"/>}
+                    {l.reminder&&<div className="remind-dot" title="Reminder set"/>}
                     <div className="lc-name">{l.name}</div>
                     <div className="lc-sub">{l.parent} · {l.subject}</div>
-                    <div className="lc-meta">
-                      <span className={`badge ${STAGE_COLORS[l.stage]}`}>{l.source}</span>
-                      <span className="lc-days">{daysSince(l.date)}d ago</span>
-                    </div>
+                    <div className="lc-meta"><span className={`badge ${STAGE_COLORS[l.stage]}`}>{l.source}</span><span className="lc-days">{daysSince(l.date)}d ago</span></div>
                   </div>
                 ))}
               </div>
             ))}
           </div>
         </div>
-
-        {/* detail panel */}
         <div className="crm-detail">
-          {!lead ? (
-            <div className="crm-empty">
-              <div className="big">👤</div>
-              <p>Select a contact from the pipeline to view their details and activity.</p>
-            </div>
-          ) : (
+          {!lead?(<div className="crm-empty"><div className="big">👤</div><p>Select a contact from the pipeline to view their details.</p></div>):(
             <div className="fade" key={lead.id}>
               <div className="cd-top">
                 <div className="cd-avatar" style={{background:avatarColor(lead.name)}}>{initials(lead.name)}</div>
                 <div className="cd-name">{lead.name}</div>
                 <div className="cd-sub">{lead.parent} · {lead.subject} · {lead.year}</div>
-                <div className="cd-tags">
-                  <span className={`badge ${STAGE_COLORS[lead.stage]}`}>{lead.stage}</span>
-                  <span className="badge b-blue">{lead.source}</span>
-                  {lead.reminder&&<span className="badge b-red">🔔 {lead.reminder}</span>}
-                </div>
+                <div className="cd-tags"><span className={`badge ${STAGE_COLORS[lead.stage]}`}>{lead.stage}</span><span className="badge b-blue">{lead.source}</span>{lead.reminder&&<span className="badge b-red">🔔 {lead.reminder}</span>}</div>
               </div>
-
-              {/* stage mover */}
-              <div className="stage-btns">
-                {STAGE_ORDER.map(s=>(
-                  <button key={s} className={`stage-btn${lead.stage===s?" act":""}`} onClick={()=>changeStage(lead.id,s)}>{s}</button>
-                ))}
-              </div>
-
-              {/* contact info */}
-              <div className="cd-info">
-                {[["📧","Email",lead.email],["📞","Phone",lead.phone],["📅","Enquired",lead.date]].map(([ic,l,v])=>(
-                  <div className="cd-row" key={l}><span style={{fontSize:"1rem"}}>{ic}</span><span className="lbl">{l}</span><span className="val">{v}</span></div>
-                ))}
-              </div>
-
-              {/* actions */}
+              <div className="stage-btns">{STAGE_ORDER.map(s=><button key={s} className={`stage-btn${lead.stage===s?" act":""}`} onClick={()=>changeStage(lead.id,s)}>{s}</button>)}</div>
+              <div className="cd-info">{[["📧","Email",lead.email],["📞","Phone",lead.phone],["📅","Enquired",lead.date]].map(([ic,l,v])=><div className="cd-row" key={l}><span style={{fontSize:"1rem"}}>{ic}</span><span className="lbl">{l}</span><span className="val">{v}</span></div>)}</div>
               <div className="cd-actions">
                 <button className="act-btn" onClick={()=>{setLogTab("email");setEmailSubj("Following up on your enquiry");}}>📧 Email</button>
                 <button className="act-btn" onClick={()=>setLogTab("note")}>📝 Note</button>
                 <button className="act-btn" onClick={()=>setLogTab("remind")}>🔔 Remind</button>
-                {(lead.stage==="Trial"||lead.stage==="Lead")&&(
-                  <button className="act-btn convert" onClick={()=>handleConvert(lead)}>⚡ Convert</button>
-                )}
+                {(lead.stage==="Trial"||lead.stage==="Lead")&&<button className="act-btn convert" onClick={()=>handleConvert(lead)}>⚡ Convert</button>}
               </div>
-
-              {/* timeline */}
-              <div className="cd-timeline">
-                {[...lead.timeline].reverse().map((t,i)=>(
-                  <div className="tl-item" key={i}>
-                    <div className={`tl-icon ${tIconClass(t.type)}`}>{tIconEmoji(t.type)}</div>
-                    <div className="tl-body">
-                      <div className="t">{t.text}</div>
-                      <div className="s">{t.detail}</div>
-                      <div className="ts">{t.ts}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* log form */}
+              <div className="cd-timeline">{[...lead.timeline].reverse().map((t,i)=><div className="tl-item" key={i}><div className={`tl-icon ${tIconClass(t.type)}`}>{tIconEmoji(t.type)}</div><div className="tl-body"><div className="t">{t.text}</div><div className="s">{t.detail}</div><div className="ts">{t.ts}</div></div></div>)}</div>
               <div className="log-form">
-                <div className="log-tabs">
-                  {[["note","📝 Note"],["email","📧 Email"],["remind","🔔 Reminder"]].map(([k,l])=>(
-                    <button key={k} className={`log-tab${logTab===k?" act":""}`} onClick={()=>setLogTab(k)}>{l}</button>
-                  ))}
-                </div>
-                {logTab==="email"&&(
-                  <input className="log-input" placeholder="Subject line..." value={emailSubj} onChange={e=>setEmailSubj(e.target.value)} style={{display:"block",marginBottom:".5rem"}}/>
-                )}
-                <textarea className="log-input" rows={3}
-                  placeholder={logTab==="note"?"Log a call, meeting, or observation...":logTab==="email"?"Write your email body...":"What do you need to follow up on?"}
-                  value={logText} onChange={e=>setLogText(e.target.value)}
-                />
-                {logTab==="remind"&&(
-                  <div className="remind-panel">
-                    <div className="rl">Reminder Date</div>
-                    <input type="date" className="log-input" value={reminderDate} onChange={e=>setReminderDate(e.target.value)} style={{marginBottom:0}}/>
-                  </div>
-                )}
-                <button className="act-btn primary" style={{width:"100%",marginTop:".65rem",padding:".65rem"}}
-                  onClick={logNote}>
-                  {logTab==="note"?"Save Note":logTab==="email"?"Send Email":"Set Reminder"}
-                </button>
+                <div className="log-tabs">{[["note","📝 Note"],["email","📧 Email"],["remind","🔔 Reminder"]].map(([k,l])=><button key={k} className={`log-tab${logTab===k?" act":""}`} onClick={()=>setLogTab(k)}>{l}</button>)}</div>
+                {logTab==="email"&&<input className="log-input" placeholder="Subject line..." value={emailSubj} onChange={e=>setEmailSubj(e.target.value)} style={{display:"block",marginBottom:".5rem"}}/>}
+                <textarea className="log-input" rows={3} placeholder={logTab==="note"?"Log a call, meeting, or observation...":logTab==="email"?"Write your email body...":"What do you need to follow up on?"} value={logText} onChange={e=>setLogText(e.target.value)}/>
+                {logTab==="remind"&&<div className="remind-panel"><div className="rl">Reminder Date</div><input type="date" className="log-input" value={reminderDate} onChange={e=>setReminderDate(e.target.value)} style={{marginBottom:0}}/></div>}
+                <button className="act-btn primary" style={{width:"100%",marginTop:".65rem",padding:".65rem"}} onClick={logNote}>{logTab==="note"?"Save Note":logTab==="email"?"Send Email":"Set Reminder"}</button>
               </div>
             </div>
           )}
@@ -622,12 +513,7 @@ function AddStudentModal({onClose,onAdd}) {
   const [copied,setCopied]=useState(false);
   const f=(k,v)=>setForm(p=>({...p,[k]:v}));
   const subjectOpts=["11+ Prep","KS3 Maths","KS3 English","KS3 Science","GCSE Maths","GCSE English","GCSE Science","A-Level Maths","A-Level Biology","A-Level Chemistry"];
-  const handleCreate=()=>{
-    if(!form.name||!form.parent||!form.parentEmail){alert("Please fill all required fields.");return;}
-    const password=genPw(), email=genEmail(form.name);
-    const s={id:Date.now(),name:form.name,year:form.year,subject:form.subject,tutor:form.tutor,parent:form.parent,parentEmail:form.parentEmail,fee:Number(form.fee),email};
-    setResult({password,email,student:s}); onAdd(s);
-  };
+  const handleCreate=()=>{ if(!form.name||!form.parent||!form.parentEmail){alert("Please fill all required fields.");return;} const password=genPw(),email=genEmail(form.name); const s={id:Date.now(),name:form.name,year:form.year,subject:form.subject,tutor:form.tutor,parent:form.parent,parentEmail:form.parentEmail,fee:Number(form.fee),email}; setResult({password,email,student:s}); onAdd(s); };
   const copy=(t)=>{navigator.clipboard?.writeText(t).catch(()=>{});setCopied(true);setTimeout(()=>setCopied(false),1500);};
   return (
     <div className="modal-bg fade" onClick={e=>e.target===e.currentTarget&&onClose()}>
@@ -658,7 +544,7 @@ function AddStudentModal({onClose,onAdd}) {
   );
 }
 
-// ─── shared navbar ──────────────────────────────────────────
+// ─── navbar ────────────────────────────────────────────────
 function Navbar({page,nav,user,onLogout,setShowLogin}) {
   if(user?.type==="student") return (
     <nav className="nav">
@@ -674,11 +560,22 @@ function Navbar({page,nav,user,onLogout,setShowLogin}) {
       <div className="nav-actions"><span style={{color:"rgba(255,255,255,.5)",fontSize:".8rem"}}>🔐 Admin</span><button className="btn-out" onClick={onLogout}>Sign Out</button></div>
     </nav>
   );
+  if(user?.type==="tutor") return (
+    <nav className="nav">
+      <div className="nav-logo" onClick={()=>nav("tdash")}>Tutor<span>ific</span></div>
+      <div className="nav-links">{[["tdash","My Dashboard"],["tattend","Mark Attendance"]].map(([p,l])=><span key={p} className={`nav-link${page===p?" act":""}`} onClick={()=>nav(p)}>{l}</span>)}</div>
+      <div className="nav-actions"><span style={{color:"rgba(255,255,255,.5)",fontSize:".8rem"}}>👩‍🏫 {user.name}</span><button className="btn-out" onClick={onLogout}>Sign Out</button></div>
+    </nav>
+  );
   return (
     <nav className="nav">
       <div className="nav-logo" onClick={()=>nav("home")}>Tutor<span>ific</span></div>
       <div className="nav-links">{[["home","Home"],["courses","Courses"],["about","About"],["pricing","Pricing"],["contact","Contact"]].map(([p,l])=><span key={p} className={`nav-link${page===p?" act":""}`} onClick={()=>nav(p)}>{l}</span>)}</div>
-      <div className="nav-actions"><button className="btn-out" onClick={()=>setShowLogin("student")}>Student Login</button><button className="btn-gold" onClick={()=>setShowLogin("admin")}>Admin</button></div>
+      <div className="nav-actions">
+        <button className="btn-out" onClick={()=>setShowLogin("student")}>Student Login</button>
+        <button className="btn-out" style={{borderColor:"rgba(13,122,95,.5)",color:"rgba(13,122,95,.9)"}} onClick={()=>setShowLogin("tutor")}>Tutor Login</button>
+        <button className="btn-gold" onClick={()=>setShowLogin("admin")}>Admin</button>
+      </div>
     </nav>
   );
 }
@@ -698,7 +595,7 @@ function Footer({nav}) {
   );
 }
 
-// ─── public pages ──────────────────────────────────────────
+// ─── public pages (unchanged) ──────────────────────────────
 function HomePage({nav,setShowLogin}) {
   return <>
     <div className="hero">
@@ -746,7 +643,7 @@ function AboutPage({nav}){return <>
   <div style={{background:"var(--navy)",padding:"4rem 3rem",textAlign:"center"}}><div className="slabel" style={{color:"var(--gold2)"}}>Our Story</div><h1 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(2rem,4vw,3.2rem)",color:"#fff",fontWeight:600}}>About Tutorific</h1></div>
   <div style={{maxWidth:1280,margin:"0 auto",padding:"5rem 3rem"}}><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"5rem",alignItems:"center"}}>
     <div style={{background:"linear-gradient(135deg,var(--navy),var(--navy2))",borderRadius:"var(--r2)",height:420,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"5rem",color:"rgba(255,255,255,.15)"}}>📚</div>
-    <div><div className="slabel">Who We Are</div><h2 className="stitle">Passionate About Every Student's Success</h2><p style={{color:"var(--muted)",fontSize:".93rem",lineHeight:1.8,marginBottom:"1.25rem"}}>Tutorific was founded with a simple belief: every student deserves access to expert, personalised tutoring — not just those whose parents can afford premium in-person rates.</p><p style={{color:"var(--muted)",fontSize:".93rem",lineHeight:1.8,marginBottom:"2rem"}}>We're a growing team of specialist tutors working with students across the UK entirely online. Our structured programmes mean students don't just pass exams — they genuinely understand their subjects.</p>
+    <div><div className="slabel">Who We Are</div><h2 className="stitle">Passionate About Every Student's Success</h2><p style={{color:"var(--muted)",fontSize:".93rem",lineHeight:1.8,marginBottom:"1.25rem"}}>Tutorific was founded with a simple belief: every student deserves access to expert, personalised tutoring.</p><p style={{color:"var(--muted)",fontSize:".93rem",lineHeight:1.8,marginBottom:"2rem"}}>We're a growing team of specialist tutors working with students across the UK entirely online.</p>
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"1rem"}}>{[["200+","Students Taught"],["8","Expert Tutors"],["95%","Pass Rate"],["4.9★","Parent Rating"]].map(([n,l])=><div key={l} style={{textAlign:"center",padding:"1.5rem",background:"var(--bg2)",borderRadius:"var(--r)"}}><div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2.2rem",fontWeight:700,color:"var(--navy)"}}>{n}</div><div style={{fontSize:".78rem",color:"var(--muted)",marginTop:".2rem"}}>{l}</div></div>)}</div>
     </div>
   </div></div>
@@ -777,23 +674,57 @@ function ContactPage({nav}){
   </>;
 }
 
-// ─── login ─────────────────────────────────────────────────
-function LoginPage({type,onLogin,nav}) {
-  const [email,setEmail]=useState(""); const [pass,setPass]=useState(""); const [err,setErr]=useState("");
-  const creds=type==="student"?{email:"emma.johnson@student.tutorific.co.uk",pass:"Tutor-4829-X",name:"Emma Johnson"}:{email:"admin@tutorific.co.uk",pass:"admin123",name:"Admin"};
-  const handle=()=>{ if(email===creds.email&&pass===creds.pass) onLogin({type,name:creds.name}); else setErr("Incorrect credentials."); };
+// ─── login (supports student / admin / tutor) ──────────────
+function LoginPage({type,onLogin,nav,tutors}) {
+  const [email,setEmail]=useState("");
+  const [pass,setPass]=useState("");
+  const [err,setErr]=useState("");
+
+  const studentCreds={email:"emma.johnson@student.tutorific.co.uk",pass:"Tutor-4829-X",name:"Emma Johnson"};
+  const adminCreds={email:"admin@tutorific.co.uk",pass:"admin123",name:"Admin"};
+
+  const handle=()=>{
+    if(type==="student"){
+      if(email===studentCreds.email&&pass===studentCreds.pass) onLogin({type:"student",name:studentCreds.name});
+      else setErr("Incorrect credentials.");
+    } else if(type==="admin"){
+      if(email===adminCreds.email&&pass===adminCreds.pass) onLogin({type:"admin",name:"Admin"});
+      else setErr("Incorrect credentials.");
+    } else if(type==="tutor"){
+      const match=tutors.find(t=>t.email===email&&t.pass===pass);
+      if(match) onLogin({type:"tutor",name:match.name,tutorId:match.id,subject:match.subject,ratePerHour:match.ratePerHour});
+      else setErr("Incorrect tutor credentials.");
+    }
+  };
+
+  const hint = type==="student"
+    ? {email:studentCreds.email,pass:studentCreds.pass}
+    : type==="admin"
+    ? {email:adminCreds.email,pass:adminCreds.pass}
+    : {email:"ahmed@tutorific.co.uk",pass:"Ahmed-2024-T"};
+
+  const title = type==="student"?"Student Portal":type==="admin"?"Admin Portal":"Tutor Portal";
+  const subtitle = type==="student"?"Access your lessons and materials":type==="admin"?"Manage students, leads and payments":"View your sessions, earnings and mark attendance";
+
   return <div className="auth-page"><div className="auth-card fu">
-    <div style={{textAlign:"center",marginBottom:"2rem"}}><div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2rem",color:"var(--navy)",fontWeight:600}}>Tutor<span style={{color:"var(--gold2)"}}>ific</span></div><h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"1.75rem",color:"var(--navy)",marginTop:"1.5rem",marginBottom:".4rem"}}>{type==="student"?"Student Portal":"Admin Portal"}</h2><p style={{color:"var(--muted)",fontSize:".85rem"}}>{type==="student"?"Access your lessons and materials":"Manage students, leads and payments"}</p></div>
-    <label className="fl">Email Address</label><input className="fi2" type="email" placeholder={creds.email} value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handle()}/>
-    <label className="fl">Password</label><input className="fi2" type="password" placeholder="Your password" value={pass} onChange={e=>setPass(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handle()}/>
+    <div style={{textAlign:"center",marginBottom:"2rem"}}>
+      <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2rem",color:"var(--navy)",fontWeight:600}}>Tutor<span style={{color:"var(--gold2)"}}>ific</span></div>
+      {type==="tutor"&&<div style={{display:"inline-block",marginTop:".5rem",background:"rgba(13,122,95,.1)",color:"var(--teal)",border:"1px solid rgba(13,122,95,.2)",borderRadius:"100px",padding:".25rem .9rem",fontSize:".72rem",fontWeight:700,letterSpacing:".08em",textTransform:"uppercase"}}>Tutor Portal</div>}
+      <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"1.75rem",color:"var(--navy)",marginTop:"1.5rem",marginBottom:".4rem"}}>{title}</h2>
+      <p style={{color:"var(--muted)",fontSize:".85rem"}}>{subtitle}</p>
+    </div>
+    <label className="fl">Email Address</label>
+    <input className="fi2" type="email" placeholder={hint.email} value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handle()}/>
+    <label className="fl">Password</label>
+    <input className="fi2" type="password" placeholder="Your password" value={pass} onChange={e=>setPass(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handle()}/>
     {err&&<p style={{color:"#b03030",fontSize:".8rem",marginBottom:".75rem"}}>{err}</p>}
     <button className="btn-full btn-navy" onClick={handle}>Sign In</button>
-    <div className="auth-hint"><strong>Demo login:</strong><br/>Email: <strong>{creds.email}</strong><br/>Password: <strong>{creds.pass}</strong></div>
+    <div className="auth-hint"><strong>Demo login:</strong><br/>Email: <strong>{hint.email}</strong><br/>Password: <strong>{hint.pass}</strong>{type==="tutor"&&<><br/><span style={{fontSize:".75rem",marginTop:".3rem",display:"block"}}>Also try: clarke@tutorific.co.uk / Clarke-2024-T</span></>}</div>
     <p style={{textAlign:"center",marginTop:"1.25rem",fontSize:".82rem",color:"var(--muted)",cursor:"pointer"}} onClick={()=>nav("home")}>← Back to website</p>
   </div></div>;
 }
 
-// ─── student dashboard ─────────────────────────────────────
+// ─── student dashboard (unchanged) ────────────────────────
 function StudentDash({page,nav,user,onLogout,sessions,onJoin}) {
   const [matTab,setMatTab]=useState("Maths");
   const mySessions=sessions.filter(s=>s.studentId===1);
@@ -830,19 +761,322 @@ function StudentDash({page,nav,user,onLogout,sessions,onJoin}) {
   </div>;
 }
 
-// ─── admin dashboard ───────────────────────────────────────
-function AdminDash({page,nav,onLogout,students,setStudents,payments,setPayments,sessions,leads,setLeads,showAdd,setShowAdd}) {
+// ─── TUTOR DASHBOARD ───────────────────────────────────────
+function TutorDash({page, nav, user, onLogout, sessions, setSessions, tutorPayments}) {
+  const mySessions = sessions.filter(s => s.tutorId === user.tutorId);
+  const myPayments = tutorPayments[user.tutorId] || [];
+  const rate = user.ratePerHour;
+
+  // Earnings calculations
+  const totalEarned = mySessions
+    .filter(s => s.attendState === "P" || s.attendState === "L")
+    .reduce((acc, s) => acc + (s.durationHours || 1) * rate, 0);
+  const totalPaid = myPayments
+    .filter(p => p.status === "Paid")
+    .reduce((acc, p) => acc + p.invoiced, 0);
+  const outstanding = totalEarned - totalPaid;
+
+  // Attendance marking state
+  const [selectedSessionId, setSelectedSessionId] = useState(null);
+  const [pendingMarks, setPendingMarks] = useState({}); // { sessionId: "P"|"A"|"L"|null }
+  const [saveFeedback, setSaveFeedback] = useState(null);
+
+  const unmarkedSessions = mySessions.filter(s => s.attendState === null);
+  const markedSessions   = mySessions.filter(s => s.attendState !== null);
+
+  const selectedSession  = mySessions.find(s => s.id === selectedSessionId) || null;
+
+  const handleSelectSession = (id) => {
+    setSelectedSessionId(Number(id));
+    setSaveFeedback(null);
+    // Pre-fill if already marked
+    const s = mySessions.find(s => s.id === Number(id));
+    if(s && s.attendState !== null) setPendingMarks(prev => ({...prev, [Number(id)]: s.attendState}));
+    else setPendingMarks(prev => ({...prev, [Number(id)]: null}));
+  };
+
+  const handleMark = (mark) => {
+    if(!selectedSessionId) return;
+    setPendingMarks(prev => ({...prev, [selectedSessionId]: mark}));
+    setSaveFeedback(null);
+  };
+
+  const handleSave = () => {
+    const mark = pendingMarks[selectedSessionId];
+    if(!mark) { setSaveFeedback("error"); return; }
+    setSessions(prev => prev.map(s =>
+      s.id === selectedSessionId
+        ? { ...s, attendState: mark, markedAt: nowTime() }
+        : s
+    ));
+    setSaveFeedback("saved");
+  };
+
+  const dotClass = s => s==="P"?"ap":s==="A"?"aa":s==="L"?"al":"an";
+  const dotLabel = s => s==="P"?"Present":s==="A"?"Absent":s==="L"?"Late":"—";
+
+  const sidebarLinks = [
+    {icon:"📊",label:"My Dashboard",p:"tdash"},
+    {icon:"✅",label:"Mark Attendance",p:"tattend"},
+  ];
+
+  const pageTitle = page === "tdash" ? "My Dashboard" : "Mark Attendance";
+
+  return (
+    <div className="dash-wrap">
+      <div className="sidebar">
+        <div className="sb-logo">Tutor<span>ific</span></div>
+        <div className="sb-nav">
+          <div className="sb-sec">Tutor Portal</div>
+          {sidebarLinks.map(s =>
+            <div key={s.p} className={`sb-link${page===s.p?" act":""}`} onClick={()=>nav(s.p)}>
+              <span style={{fontSize:"1rem"}}>{s.icon}</span>{s.label}
+            </div>
+          )}
+        </div>
+        <div className="sb-bottom">
+          <div className="sb-user">
+            <div className="sb-avatar" style={{background:"var(--teal)"}}>{initials(user.name)}</div>
+            <div><div className="sb-name">{user.name}</div><div className="sb-role">{user.subject}</div></div>
+          </div>
+          <div className="sb-link" style={{marginTop:".5rem"}} onClick={onLogout}><span>🚪</span>Sign Out</div>
+        </div>
+      </div>
+
+      <div className="dm">
+        <div className="dh">
+          <div><h2>{pageTitle}</h2><div className="date">Friday, 19 March 2026</div></div>
+          {page==="tdash" && <span style={{fontSize:".8rem",color:"var(--muted)"}}>£{rate}/hr · {mySessions.length} session{mySessions.length!==1?"s":""} this month</span>}
+        </div>
+
+        <div className="dc">
+
+          {/* ── TUTOR DASHBOARD PAGE ─────────────────────────────── */}
+          {page==="tdash" && <>
+
+            {/* Earnings summary cards */}
+            <div className="stat-grid-3" style={{marginBottom:"2rem"}}>
+              <div className="earn-card green">
+                <div className="lbl" style={{fontSize:".72rem",color:"var(--muted)",fontWeight:600,letterSpacing:".08em",textTransform:"uppercase",marginBottom:".45rem"}}>Total Earned</div>
+                <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2.1rem",color:"var(--teal)",fontWeight:600,lineHeight:1}}>{fmtGBP(totalEarned)}</div>
+                <div style={{fontSize:".75rem",color:"var(--muted)",marginTop:".35rem"}}>for attended sessions · £{rate}/hr</div>
+              </div>
+              <div className="earn-card gold">
+                <div className="lbl" style={{fontSize:".72rem",color:"var(--muted)",fontWeight:600,letterSpacing:".08em",textTransform:"uppercase",marginBottom:".45rem"}}>Paid Out</div>
+                <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2.1rem",color:"var(--gold)",fontWeight:600,lineHeight:1}}>{fmtGBP(totalPaid)}</div>
+                <div style={{fontSize:".75rem",color:"var(--muted)",marginTop:".35rem"}}>{myPayments.filter(p=>p.status==="Paid").length} payment{myPayments.filter(p=>p.status==="Paid").length!==1?"s":""} received</div>
+              </div>
+              <div className="earn-card navy">
+                <div className="lbl" style={{fontSize:".72rem",color:"var(--muted)",fontWeight:600,letterSpacing:".08em",textTransform:"uppercase",marginBottom:".45rem"}}>Outstanding</div>
+                <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2.1rem",color:outstanding>0?"var(--navy)":"var(--teal)",fontWeight:600,lineHeight:1}}>{fmtGBP(outstanding)}</div>
+                <div style={{fontSize:".75rem",color:outstanding>0?"var(--gold)":"var(--teal)",marginTop:".35rem"}}>{outstanding>0?"awaiting payment":"all up to date ✓"}</div>
+              </div>
+            </div>
+
+            <div style={{display:"grid",gridTemplateColumns:"1.4fr 1fr",gap:"1.5rem"}}>
+
+              {/* Session history table */}
+              <div className="card" style={{marginBottom:0}}>
+                <div className="card-h"><h3>Session History</h3></div>
+                <div style={{overflowX:"auto"}}>
+                  <table>
+                    <thead><tr><th>Date</th><th>Student</th><th>Subject</th><th>Duration</th><th>Attendance</th><th>Earnings</th></tr></thead>
+                    <tbody>
+                      {mySessions.length===0&&<tr><td colSpan={6} style={{textAlign:"center",color:"var(--muted)",padding:"2rem"}}>No sessions yet.</td></tr>}
+                      {mySessions.map(s=>{
+                        const amt = (s.attendState==="P"||s.attendState==="L") ? (s.durationHours||1)*rate : 0;
+                        return <tr key={s.id}>
+                          <td>{s.date} {s.month}</td>
+                          <td style={{fontWeight:600}}>{s.studentName}</td>
+                          <td>{s.subj}</td>
+                          <td>{s.durationHours||1}h</td>
+                          <td>
+                            {s.attendState
+                              ? <span className={`adot ${dotClass(s.attendState)}`} title={dotLabel(s.attendState)}>{s.attendState}</span>
+                              : <span style={{fontSize:".75rem",color:"var(--muted)"}}>Not marked</span>}
+                          </td>
+                          <td style={{fontWeight:600,color:amt>0?"var(--teal)":"var(--muted)"}}>{amt>0?fmtGBP(amt):"—"}</td>
+                        </tr>;
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Payment history */}
+              <div className="card" style={{marginBottom:0}}>
+                <div className="card-h"><h3>Payment History</h3></div>
+                <div style={{padding:"0 1.4rem"}}>
+                  {myPayments.length===0&&<p style={{color:"var(--muted)",padding:"2rem 0",textAlign:"center",fontSize:".85rem"}}>No payment records yet.</p>}
+                  {myPayments.map((p,i)=>(
+                    <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:".85rem 0",borderBottom:"1px solid var(--border)"}}>
+                      <div>
+                        <div style={{fontWeight:600,fontSize:".88rem"}}>{p.month}</div>
+                        <div style={{fontSize:".77rem",color:"var(--muted)",marginTop:".1rem"}}>{p.sessions} sessions</div>
+                      </div>
+                      <div style={{textAlign:"right"}}>
+                        <div style={{fontWeight:700,fontSize:"1rem",fontFamily:"'Cormorant Garamond',serif",color:"var(--navy)"}}>£{p.invoiced}</div>
+                        <span className={`badge b-${p.status==="Paid"?"green":"amber"}`}>{p.status}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+          </>}
+
+          {/* ── MARK ATTENDANCE PAGE ──────────────────────────────── */}
+          {page==="tattend" && <>
+
+            <div style={{background:"rgba(13,122,95,.06)",border:"1px solid rgba(13,122,95,.18)",borderRadius:"var(--r)",padding:"1rem 1.25rem",marginBottom:"1.75rem",display:"flex",alignItems:"center",gap:".75rem"}}>
+              <span style={{fontSize:"1.1rem"}}>✅</span>
+              <p style={{fontSize:".83rem",color:"var(--teal)",lineHeight:1.6}}>Select a session below, then mark each student's attendance. For 1-to-1 sessions this is the student in that session.</p>
+            </div>
+
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"1.5rem",alignItems:"start"}}>
+
+              {/* Left: session picker + attendance form */}
+              <div>
+                <div className="card" style={{marginBottom:"1.25rem"}}>
+                  <div className="card-h"><h3>Select Session</h3></div>
+                  <div className="card-b">
+                    {mySessions.length === 0 && <p style={{color:"var(--muted)",fontSize:".85rem"}}>No sessions assigned to you.</p>}
+                    <div style={{display:"flex",flexDirection:"column",gap:".5rem"}}>
+                      {mySessions.map(s=>(
+                        <div
+                          key={s.id}
+                          onClick={()=>handleSelectSession(s.id)}
+                          style={{
+                            padding:".8rem 1rem",borderRadius:8,cursor:"pointer",border:"1.5px solid",
+                            borderColor: selectedSessionId===s.id ? "var(--teal)" : "var(--border)",
+                            background: selectedSessionId===s.id ? "rgba(13,122,95,.05)" : "#fff",
+                            transition:"all .15s",
+                          }}
+                        >
+                          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                            <div>
+                              <div style={{fontWeight:600,fontSize:".88rem"}}>{s.date} {s.month} · {s.time}</div>
+                              <div style={{fontSize:".77rem",color:"var(--muted)",marginTop:".1rem"}}>{s.studentName} · {s.subj} — {s.topic}</div>
+                            </div>
+                            {s.attendState
+                              ? <span className={`adot ${dotClass(s.attendState)}`}>{s.attendState}</span>
+                              : <span style={{fontSize:".7rem",color:"var(--gold)",fontWeight:700,background:"rgba(201,149,11,.1)",padding:"2px 8px",borderRadius:100}}>Unmarked</span>}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Attendance form for selected session */}
+                {selectedSession && (
+                  <div className="card fade" style={{marginBottom:0}}>
+                    <div className="card-h">
+                      <h3>Mark Attendance</h3>
+                      <span style={{fontSize:".78rem",color:"var(--muted)"}}>{selectedSession.date} {selectedSession.month}</span>
+                    </div>
+                    <div className="card-b">
+                      <div className="attend-toggle-row">
+                        <div>
+                          <div className="sname">{selectedSession.studentName}</div>
+                          <div className="sdetail">{selectedSession.subj} · {selectedSession.durationHours||1}h session</div>
+                        </div>
+                        <div className="toggle-group">
+                          {[["P","Present","present"],["L","Late","late"],["A","Absent","absent"]].map(([code,label,cls])=>(
+                            <button
+                              key={code}
+                              className={`tog${pendingMarks[selectedSessionId]===code?" "+cls:""}`}
+                              onClick={()=>handleMark(code)}
+                            >{label}</button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:"1.1rem",paddingTop:"1rem",borderTop:"1px solid var(--border)"}}>
+                        {saveFeedback==="saved" && <span style={{fontSize:".82rem",color:"var(--teal)",fontWeight:600}}>✓ Attendance saved!</span>}
+                        {saveFeedback==="error" && <span style={{fontSize:".82rem",color:"#a02020",fontWeight:600}}>Please choose an option first.</span>}
+                        {!saveFeedback && <span/>}
+                        <button
+                          className="btn-meet"
+                          style={{padding:".55rem 1.4rem",fontSize:".85rem"}}
+                          onClick={handleSave}
+                        >Save Attendance</button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Right: summary of marked sessions this month */}
+              <div className="card" style={{marginBottom:0}}>
+                <div className="card-h"><h3>Attendance Summary</h3><span style={{fontSize:".8rem",color:"var(--muted)"}}>March 2026</span></div>
+                <div style={{padding:"1rem 1.6rem"}}>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:".75rem",marginBottom:"1.25rem"}}>
+                    {[
+                      {label:"Present",count:markedSessions.filter(s=>s.attendState==="P").length,cls:"b-green"},
+                      {label:"Late",count:markedSessions.filter(s=>s.attendState==="L").length,cls:"b-amber"},
+                      {label:"Absent",count:markedSessions.filter(s=>s.attendState==="A").length,cls:"b-red"},
+                    ].map(c=>(
+                      <div key={c.label} style={{textAlign:"center",padding:".85rem .5rem",background:"var(--bg)",borderRadius:8}}>
+                        <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"1.75rem",fontWeight:600,color:"var(--navy)"}}>{c.count}</div>
+                        <span className={`badge ${c.cls}`} style={{marginTop:".25rem"}}>{c.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{fontSize:".8rem",color:"var(--muted)",marginBottom:".75rem",fontWeight:600,textTransform:"uppercase",letterSpacing:".06em"}}>All sessions</div>
+                  {mySessions.map(s=>(
+                    <div key={s.id} style={{display:"flex",alignItems:"center",gap:".75rem",padding:".65rem 0",borderBottom:"1px solid var(--border)"}}>
+                      <span className={`adot ${s.attendState?dotClass(s.attendState):"an"}`}>{s.attendState||"?"}</span>
+                      <div style={{flex:1}}>
+                        <div style={{fontSize:".85rem",fontWeight:600}}>{s.studentName}</div>
+                        <div style={{fontSize:".75rem",color:"var(--muted)"}}>{s.date} {s.month} · {s.topic}</div>
+                      </div>
+                      {s.attendState && <span style={{fontSize:".72rem",color:"var(--muted)"}}>{s.markedAt||""}</span>}
+                    </div>
+                  ))}
+                  {unmarkedSessions.length > 0 && (
+                    <div style={{marginTop:".85rem",padding:".65rem .85rem",background:"rgba(201,149,11,.06)",border:"1px solid rgba(201,149,11,.18)",borderRadius:8,fontSize:".78rem",color:"var(--gold)",fontWeight:600}}>
+                      ⚠ {unmarkedSessions.length} session{unmarkedSessions.length!==1?"s":""} still need{unmarkedSessions.length===1?"s":""} marking
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </>}
+
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── admin dashboard (unchanged except atutors now uses tutorPayments state) ─
+function AdminDash({page,nav,onLogout,students,setStudents,payments,setPayments,sessions,setSessions,leads,setLeads,showAdd,setShowAdd,tutorPayments,setTutorPayments}) {
   const totalRevenue=payments.filter(p=>p.status==="Paid").reduce((a,p)=>a+p.amount,0);
   const outstanding=payments.filter(p=>p.status!=="Paid").reduce((a,p)=>a+p.amount,0);
-  const totalOwed=TUTORS.reduce((a,t)=>a+t.owed,0);
   const dotClass=s=>s==="P"?"ap":s==="A"?"aa":s==="L"?"al":"an";
 
-  const handleAddStudent=(s)=>{
-    setStudents(prev=>[...prev,s]);
-    setPayments(prev=>[...prev,{id:Date.now(),studentId:s.id,student:s.name,parent:s.parent,amount:s.fee,due:"01 Apr",paid:"—",status:"Pending"}]);
-  };
+  const handleAddStudent=(s)=>{ setStudents(prev=>[...prev,s]); setPayments(prev=>[...prev,{id:Date.now(),studentId:s.id,student:s.name,parent:s.parent,amount:s.fee,due:"01 Apr",paid:"—",status:"Pending"}]); };
   const markPaid=(id)=>setPayments(prev=>prev.map(p=>p.id===id?{...p,status:"Paid",paid:"Today"}:p));
   const handleConvertFromCRM=(newStudent)=>{ setStudents(prev=>[...prev,newStudent]); setPayments(prev=>[...prev,{id:Date.now(),studentId:newStudent.id,student:newStudent.name,parent:newStudent.parent,amount:newStudent.fee,due:"01 Apr",paid:"—",status:"Pending"}]); };
+
+  // Tutor totals derived from tutorPayments state
+  const tutorRows = TUTORS_AUTH.map(t => {
+    const pList = tutorPayments[t.id] || [];
+    const invoiced = pList.reduce((a,p)=>a+p.invoiced,0);
+    const paid = pList.filter(p=>p.status==="Paid").reduce((a,p)=>a+p.invoiced,0);
+    const sessions_count = pList.reduce((a,p)=>a+p.sessions,0);
+    return { ...t, invoiced, paid, owed: invoiced-paid, sessions: sessions_count };
+  });
+  const totalOwed = tutorRows.reduce((a,t)=>a+t.owed,0);
+
+  const markTutorPaid = (tutorId) => {
+    setTutorPayments(prev => ({
+      ...prev,
+      [tutorId]: prev[tutorId].map(p => p.status==="Pending" ? {...p, status:"Paid"} : p)
+    }));
+  };
 
   const sidebarLinks=[
     {icon:"📊",label:"Overview",p:"adash"},
@@ -852,7 +1086,6 @@ function AdminDash({page,nav,onLogout,students,setStudents,payments,setPayments,
     {icon:"💳",label:"Payments",p:"apayments"},
     {icon:"👨‍🏫",label:"Tutors",p:"atutors"},
   ];
-
   const pageTitle={adash:"Business Overview",aStudents:"Student Accounts",acrm:"CRM — Pipeline",aattend:"Live Attendance",apayments:"Parent Payments",atutors:"Tutor Payments"}[page]||"Admin";
 
   return <div className="dash-wrap">
@@ -868,11 +1101,10 @@ function AdminDash({page,nav,onLogout,students,setStudents,payments,setPayments,
       <div className="dh">
         <div><h2>{pageTitle}</h2><div className="date">Friday, 19 March 2026</div></div>
         {page==="aStudents"&&<button className="btn-p" style={{padding:".55rem 1.25rem",fontSize:".85rem"}} onClick={()=>setShowAdd(true)}>+ Add New Student</button>}
-        {page==="acrm"&&<button className="btn-p" style={{padding:".55rem 1.25rem",fontSize:".85rem"}} onClick={()=>{ const name=prompt("Contact name?"); if(name) setLeads(prev=>[...prev,{id:Date.now(),name,parent:"",email:"",phone:"",stage:"Lead",subject:"",year:"",source:"Manual",date:"2026-03-19",reminder:null,timeline:[{type:"enq",text:"Lead added manually",detail:`Added by admin.`,ts:"19 Mar, "+nowTime()}]}]); }}>+ Add Lead</button>}
+        {page==="acrm"&&<button className="btn-p" style={{padding:".55rem 1.25rem",fontSize:".85rem"}} onClick={()=>{ const name=prompt("Contact name?"); if(name) setLeads(prev=>[...prev,{id:Date.now(),name,parent:"",email:"",phone:"",stage:"Lead",subject:"",year:"",source:"Manual",date:"2026-03-19",reminder:null,timeline:[{type:"enq",text:"Lead added manually",detail:"Added by admin.",ts:"19 Mar, "+nowTime()}]}]); }}>+ Add Lead</button>}
       </div>
       <div className="dc">
 
-        {/* Overview */}
         {page==="adash"&&<>
           <div className="stat-grid">{[{l:"Active Students",v:students.length,h:"This term",c:"hint"},{l:"Revenue Collected",v:`£${totalRevenue}`,h:"March 2026",c:"hint"},{l:"Outstanding",v:`£${outstanding}`,h:`${payments.filter(p=>p.status!=="Paid").length} families`,c:"hinta"},{l:"Open Leads",v:leads.filter(l=>l.stage==="Lead"||l.stage==="Trial").length,h:"In pipeline",c:"hinta"}].map(s=><div className="sb2" key={s.l}><div className="lbl">{s.l}</div><div className="val">{s.v}</div><div className={s.c}>{s.h}</div></div>)}</div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"1.5rem"}}>
@@ -881,32 +1113,44 @@ function AdminDash({page,nav,onLogout,students,setStudents,payments,setPayments,
           </div>
         </>}
 
-        {/* Students */}
         {page==="aStudents"&&<>
           <div style={{background:"rgba(201,149,11,.06)",border:"1px solid rgba(201,149,11,.18)",borderRadius:"var(--r)",padding:"1rem 1.25rem",marginBottom:"1.75rem",display:"flex",alignItems:"center",gap:".75rem"}}><span style={{fontSize:"1.1rem"}}>🔑</span><p style={{fontSize:".83rem",color:"var(--gold)",lineHeight:1.6}}>Adding a student generates a secure password and emails it to the parent immediately.</p></div>
           <div className="card"><div className="card-h"><h3>All Students ({students.length})</h3></div><div style={{overflowX:"auto"}}><table><thead><tr><th>Student</th><th>Year</th><th>Subject</th><th>Tutor</th><th>Parent</th><th>Portal Email</th><th>Fee</th></tr></thead><tbody>{students.map(s=><tr key={s.id}><td style={{fontWeight:600}}>{s.name}</td><td>{s.year}</td><td>{s.subject}</td><td>{s.tutor}</td><td>{s.parent}</td><td style={{fontSize:".78rem",color:"var(--muted)",fontFamily:"monospace"}}>{s.email}</td><td style={{fontWeight:600}}>£{s.fee}/mo</td></tr>)}</tbody></table></div></div>
         </>}
 
-        {/* CRM */}
         {page==="acrm"&&<CRMPanel leads={leads} setLeads={setLeads} onConvertToStudent={handleConvertFromCRM}/>}
 
-        {/* Attendance */}
         {page==="aattend"&&<>
-          <div style={{background:"var(--teal2)",border:"1px solid rgba(13,122,95,.2)",borderRadius:"var(--r)",padding:"1rem 1.25rem",marginBottom:"1.75rem",display:"flex",alignItems:"center",gap:".75rem"}}><span className="live-dot"></span><p style={{fontSize:".83rem",color:"var(--teal)",lineHeight:1.6}}><strong>Live tracking.</strong> When a student clicks "Join Session" in their portal, their row updates here instantly.</p></div>
-          {sessions.filter(s=>s.attendState==="P").length>0&&<div className="card" style={{marginBottom:"1.75rem"}}><div className="card-h"><h3>Session Joins — Live</h3></div><div className="card-b">{sessions.filter(s=>s.attendState==="P").map(s=><div key={s.id} style={{display:"flex",alignItems:"center",gap:"1rem",padding:".7rem 0",borderBottom:"1px solid var(--border)"}}><span className="adot ap">P</span><div style={{flex:1}}><div style={{fontSize:".88rem",fontWeight:600}}>Emma Johnson</div><div style={{fontSize:".77rem",color:"var(--muted)"}}>{s.subj} — {s.topic} · joined {s.joinedAt}</div></div><span className="badge b-green">Auto-logged</span></div>)}</div></div>}
-          <div className="card"><div className="card-h"><h3>Historical — March 2026</h3><div className="attend-legend">{[["P","ap","Present"],["A","aa","Absent"],["L","al","Late"]].map(([s,c,l])=><span key={s}><span className={`adot ${c}`}>{s}</span>{l}</span>)}</div></div><div style={{overflowX:"auto"}}><table><thead><tr><th>Student</th><th>Year</th><th>Subject</th><th>Tutor</th>{PAST_ATTEND[1].map(w=><th key={w.d}>{w.d}</th>)}<th>Rate</th></tr></thead><tbody>{students.filter(s=>PAST_ATTEND[s.id]).map(s=>{ const hist=PAST_ATTEND[s.id]||[]; const rate=hist.length?Math.round((hist.filter(a=>a.s==="P").length/hist.length)*100):0; return <tr key={s.id}><td style={{fontWeight:600}}>{s.name}</td><td>{s.year}</td><td>{s.subject}</td><td>{s.tutor}</td>{hist.map((a,i)=><td key={i}><span className={`adot ${dotClass(a.s)}`}>{a.s}</span></td>)}<td><span className={`badge b-${rate>=90?"green":rate>=75?"amber":"red"}`}>{rate}%</span></td></tr>; })}</tbody></table></div></div>
+          <div style={{background:"var(--teal2)",border:"1px solid rgba(13,122,95,.2)",borderRadius:"var(--r)",padding:"1rem 1.25rem",marginBottom:"1.75rem",display:"flex",alignItems:"center",gap:".75rem"}}><span className="live-dot"></span><p style={{fontSize:".83rem",color:"var(--teal)",lineHeight:1.6}}><strong>Live tracking.</strong> When a student clicks "Join Session" or a tutor marks attendance, rows update here.</p></div>
+          {sessions.filter(s=>s.attendState==="P").length>0&&<div className="card" style={{marginBottom:"1.75rem"}}><div className="card-h"><h3>Session Joins — Live</h3></div><div className="card-b">{sessions.filter(s=>s.attendState==="P").map(s=><div key={s.id} style={{display:"flex",alignItems:"center",gap:"1rem",padding:".7rem 0",borderBottom:"1px solid var(--border)"}}><span className="adot ap">P</span><div style={{flex:1}}><div style={{fontSize:".88rem",fontWeight:600}}>{s.studentName}</div><div style={{fontSize:".77rem",color:"var(--muted)"}}>{s.subj} — {s.topic} · {s.tutor}{s.joinedAt?" · joined "+s.joinedAt:""}</div></div><span className="badge b-green">Logged</span></div>)}</div></div>}
+          <div className="card"><div className="card-h"><h3>All Sessions — March 2026</h3><div className="attend-legend">{[["P","ap","Present"],["A","aa","Absent"],["L","al","Late"]].map(([s,c,l])=><span key={s}><span className={`adot ${c}`}>{s}</span>{l}</span>)}</div></div><div style={{overflowX:"auto"}}><table><thead><tr><th>Student</th><th>Date</th><th>Subject</th><th>Tutor</th><th>Status</th><th>Marked</th></tr></thead><tbody>{sessions.map(s=><tr key={s.id}><td style={{fontWeight:600}}>{s.studentName}</td><td>{s.date} {s.month}</td><td>{s.subj}</td><td>{s.tutor}</td><td>{s.attendState?<span className={`adot ${dotClass(s.attendState)}`}>{s.attendState}</span>:<span style={{fontSize:".75rem",color:"var(--muted)"}}>Pending</span>}</td><td style={{fontSize:".75rem",color:"var(--muted)"}}>{s.markedAt||"—"}</td></tr>)}</tbody></table></div></div>
+          <div className="card" style={{marginTop:"1.5rem"}}><div className="card-h"><h3>Historical — Past Sessions</h3><div className="attend-legend">{[["P","ap","Present"],["A","aa","Absent"],["L","al","Late"]].map(([s,c,l])=><span key={s}><span className={`adot ${c}`}>{s}</span>{l}</span>)}</div></div><div style={{overflowX:"auto"}}><table><thead><tr><th>Student</th><th>Year</th><th>Subject</th><th>Tutor</th>{PAST_ATTEND[1].map(w=><th key={w.d}>{w.d}</th>)}<th>Rate</th></tr></thead><tbody>{students.filter(s=>PAST_ATTEND[s.id]).map(s=>{ const hist=PAST_ATTEND[s.id]||[]; const rate=hist.length?Math.round((hist.filter(a=>a.s==="P").length/hist.length)*100):0; return <tr key={s.id}><td style={{fontWeight:600}}>{s.name}</td><td>{s.year}</td><td>{s.subject}</td><td>{s.tutor}</td>{hist.map((a,i)=><td key={i}><span className={`adot ${dotClass(a.s)}`}>{a.s}</span></td>)}<td><span className={`badge b-${rate>=90?"green":rate>=75?"amber":"red"}`}>{rate}%</span></td></tr>; })}</tbody></table></div></div>
         </>}
 
-        {/* Payments */}
         {page==="apayments"&&<>
           <div className="stat-grid-3">{[{l:"Collected",v:`£${totalRevenue}`,h:`${payments.filter(p=>p.status==="Paid").length} payments`,c:"hint"},{l:"Outstanding",v:`£${outstanding}`,h:`${payments.filter(p=>p.status!=="Paid").length} families`,c:"hinta"},{l:"Total Expected",v:`£${payments.reduce((a,p)=>a+p.amount,0)}`,h:"March 2026",c:"hint"}].map(s=><div className="sb2" key={s.l}><div className="lbl">{s.l}</div><div className="val">{s.v}</div><div className={s.c}>{s.h}</div></div>)}</div>
           <div className="card"><div className="card-h"><h3>Parent Payments — March 2026</h3></div><table><thead><tr><th>Student</th><th>Parent</th><th>Amount</th><th>Due</th><th>Paid</th><th>Status</th><th>Action</th></tr></thead><tbody>{payments.map(p=><tr key={p.id}><td style={{fontWeight:600}}>{p.student}</td><td>{p.parent}</td><td style={{fontWeight:600}}>£{p.amount}</td><td>{p.due}</td><td>{p.paid}</td><td><span className={`badge b-${p.status==="Paid"?"green":p.status==="Overdue"?"red":"amber"}`}>{p.status}</span></td><td>{p.status!=="Paid"&&<><button onClick={()=>markPaid(p.id)} style={{background:"var(--teal)",color:"#fff",border:"none",borderRadius:6,padding:".32rem .85rem",fontSize:".75rem",cursor:"pointer",fontWeight:700,fontFamily:"'Outfit',sans-serif",marginRight:".4rem"}}>Mark Paid</button><button onClick={()=>alert(`Reminder sent to ${p.parent}.`)} style={{background:"transparent",border:"1px solid var(--border)",borderRadius:6,padding:".32rem .75rem",fontSize:".75rem",cursor:"pointer",fontFamily:"'Outfit',sans-serif"}}>Remind</button></>}</td></tr>)}</tbody></table></div>
         </>}
 
-        {/* Tutors */}
         {page==="atutors"&&<>
-          <div className="stat-grid-3">{[{l:"Total Tutors",v:TUTORS.length,h:"Active",c:"hint"},{l:"Total Sessions",v:TUTORS.reduce((a,t)=>a+t.sessions,0),h:"This month",c:"hint"},{l:"Outstanding",v:`£${totalOwed}`,h:"To 2 tutors",c:"hinta"}].map(s=><div className="sb2" key={s.l}><div className="lbl">{s.l}</div><div className="val">{s.v}</div><div className={s.c}>{s.h}</div></div>)}</div>
-          <div className="card"><div className="card-h"><h3>Tutor Payment Schedule — March 2026</h3></div><table><thead><tr><th>Tutor</th><th>Subjects</th><th>Sessions</th><th>Rate/hr</th><th>Invoiced</th><th>Paid</th><th>Owed</th><th>Action</th></tr></thead><tbody>{TUTORS.map(t=><tr key={t.id}><td style={{fontWeight:600}}>{t.name}</td><td>{t.subjects}</td><td style={{textAlign:"center"}}>{t.sessions}</td><td>£{t.rate}</td><td>£{t.invoiced}</td><td style={{color:"var(--teal)",fontWeight:600}}>£{t.paid}</td><td style={{color:t.owed>0?"var(--gold)":"var(--teal)",fontWeight:700}}>£{t.owed}</td><td>{t.owed>0?<button onClick={()=>alert(`£${t.owed} payment to ${t.name} logged.`)} style={{background:"var(--teal)",color:"#fff",border:"none",borderRadius:6,padding:".35rem .85rem",fontSize:".75rem",cursor:"pointer",fontWeight:600,fontFamily:"'Outfit',sans-serif"}}>Mark Paid</button>:<span className="badge b-green">Up to date</span>}</td></tr>)}</tbody></table></div>
+          <div className="stat-grid-3">{[{l:"Total Tutors",v:tutorRows.length,h:"Active",c:"hint"},{l:"Total Sessions",v:tutorRows.reduce((a,t)=>a+t.sessions,0),h:"This month",c:"hint"},{l:"Outstanding",v:`£${totalOwed}`,h:`To ${tutorRows.filter(t=>t.owed>0).length} tutor(s)`,c:"hinta"}].map(s=><div className="sb2" key={s.l}><div className="lbl">{s.l}</div><div className="val">{s.v}</div><div className={s.c}>{s.h}</div></div>)}</div>
+          <div className="card"><div className="card-h"><h3>Tutor Payment Schedule</h3></div><table><thead><tr><th>Tutor</th><th>Subject</th><th>Sessions</th><th>Rate/hr</th><th>Invoiced</th><th>Paid</th><th>Owed</th><th>Action</th></tr></thead><tbody>{tutorRows.map(t=><tr key={t.id}><td style={{fontWeight:600}}>{t.name}</td><td>{t.subject}</td><td style={{textAlign:"center"}}>{t.sessions}</td><td>£{t.ratePerHour}</td><td>£{t.invoiced}</td><td style={{color:"var(--teal)",fontWeight:600}}>£{t.paid}</td><td style={{color:t.owed>0?"var(--gold)":"var(--teal)",fontWeight:700}}>£{t.owed}</td><td>{t.owed>0?<button onClick={()=>markTutorPaid(t.id)} style={{background:"var(--teal)",color:"#fff",border:"none",borderRadius:6,padding:".35rem .85rem",fontSize:".75rem",cursor:"pointer",fontWeight:600,fontFamily:"'Outfit',sans-serif"}}>Mark Paid</button>:<span className="badge b-green">Up to date</span>}</td></tr>)}</tbody></table></div>
+          {/* Per-tutor payment breakdown */}
+          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"1.25rem",marginTop:"1.5rem"}}>
+            {tutorRows.map(t=>(
+              <div className="card" key={t.id} style={{marginBottom:0}}>
+                <div className="card-h"><h3 style={{fontSize:".95rem"}}>{t.name}</h3><span style={{fontSize:".75rem",color:"var(--muted)"}}>£{t.ratePerHour}/hr</span></div>
+                <div style={{padding:"0 1.4rem"}}>
+                  {(tutorPayments[t.id]||[]).map((p,i)=>(
+                    <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:".75rem 0",borderBottom:"1px solid var(--border)"}}>
+                      <div><div style={{fontSize:".85rem",fontWeight:600}}>{p.month}</div><div style={{fontSize:".72rem",color:"var(--muted)"}}>{p.sessions} sessions</div></div>
+                      <div style={{textAlign:"right"}}><div style={{fontWeight:700,fontFamily:"'Cormorant Garamond',serif",fontSize:"1rem"}}>£{p.invoiced}</div><span className={`badge b-${p.status==="Paid"?"green":"amber"}`}>{p.status}</span></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </>}
 
       </div>
@@ -915,7 +1159,7 @@ function AdminDash({page,nav,onLogout,students,setStudents,payments,setPayments,
   </div>;
 }
 
-// ─── app ───────────────────────────────────────────────────
+// ─── app root ──────────────────────────────────────────────
 export default function App() {
   const [page,setPage]=useState("home");
   const [user,setUser]=useState(null);
@@ -925,17 +1169,26 @@ export default function App() {
   const [sessions,setSessions]=useState(INIT_SESSIONS);
   const [leads,setLeads]=useState(INIT_LEADS);
   const [showAdd,setShowAdd]=useState(false);
+  const [tutorPayments,setTutorPayments]=useState(TUTOR_PAYMENTS_INIT);
 
   const nav=(p)=>{ setPage(p); setShowLogin(null); window.scrollTo(0,0); };
-  const onLogin=(u)=>{ setUser(u); setShowLogin(null); nav(u.type==="student"?"sdash":"adash"); };
+  const onLogin=(u)=>{ setUser(u); setShowLogin(null); if(u.type==="student") nav("sdash"); else if(u.type==="admin") nav("adash"); else nav("tdash"); };
   const onLogout=()=>{ setUser(null); nav("home"); };
   const handleJoin=(id)=>{ const t=nowTime(); setSessions(prev=>prev.map(s=>s.id===id?{...s,attendState:"P",joinedAt:t}:s)); };
 
   const nb=<Navbar page={page} nav={nav} user={user} onLogout={onLogout} setShowLogin={setShowLogin}/>;
 
-  if(showLogin) return <><style>{CSS}</style>{nb}<LoginPage type={showLogin} onLogin={onLogin} nav={nav}/></>;
+  if(showLogin) return <><style>{CSS}</style>{nb}<LoginPage type={showLogin} onLogin={onLogin} nav={nav} tutors={TUTORS_AUTH}/></>;
+
   if(user?.type==="student") return <><style>{CSS}</style>{nb}<StudentDash page={page} nav={nav} user={user} onLogout={onLogout} sessions={sessions} onJoin={handleJoin}/></>;
-  if(user?.type==="admin") return <><style>{CSS}</style>{nb}<AdminDash page={page} nav={nav} onLogout={onLogout} students={students} setStudents={setStudents} payments={payments} setPayments={setPayments} sessions={sessions} leads={leads} setLeads={setLeads} showAdd={showAdd} setShowAdd={setShowAdd}/></>;
+
+  if(user?.type==="tutor") return <><style>{CSS}</style>{nb}
+    <TutorDash page={page} nav={nav} user={user} onLogout={onLogout} sessions={sessions} setSessions={setSessions} tutorPayments={tutorPayments}/>
+  </>;
+
+  if(user?.type==="admin") return <><style>{CSS}</style>{nb}
+    <AdminDash page={page} nav={nav} onLogout={onLogout} students={students} setStudents={setStudents} payments={payments} setPayments={setPayments} sessions={sessions} setSessions={setSessions} leads={leads} setLeads={setLeads} showAdd={showAdd} setShowAdd={setShowAdd} tutorPayments={tutorPayments} setTutorPayments={setTutorPayments}/>
+  </>;
 
   return <><style>{CSS}</style>{nb}
     {page==="home"&&<HomePage nav={nav} setShowLogin={setShowLogin}/>}
