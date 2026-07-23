@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { QuizRunner, MasteryPanel, StudyGuideViewer, TutorRecapForm, AudioUploader, AdminStudentAIPanel } from "./AIComponents";
 
 // ─── CSS ───────────────────────────────────────────────────
 const CSS = `
@@ -304,6 +305,98 @@ tbody tr:hover{background:rgba(11,29,51,.02)}
 .fc ul li span:hover{color:var(--gold2)}
 .fb{border-top:1px solid rgba(255,255,255,.09);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;max-width:1280px;margin:0 auto}
 .fb p{color:rgba(255,255,255,.3);font-size:.78rem}
+
+/* HAMBURGER / MOBILE NAV */
+.ham{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:.4rem;border:none;background:transparent;flex-shrink:0}
+.ham span{display:block;width:22px;height:2px;background:#fff;border-radius:2px;transition:all .25s}
+.ham.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.ham.open span:nth-child(2){opacity:0}
+.ham.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mob-menu{display:none;position:fixed;inset:64px 0 0 0;background:var(--navy);z-index:190;padding:1.5rem 1.75rem;flex-direction:column;gap:.15rem;overflow-y:auto}
+.mob-menu.open{display:flex}
+.mob-link{color:rgba(255,255,255,.7);font-size:.95rem;font-weight:500;padding:.85rem 0;border-bottom:1px solid rgba(255,255,255,.07);cursor:pointer;transition:color .2s}
+.mob-link:hover,.mob-link.act{color:#fff}
+.mob-divider{height:1px;background:rgba(255,255,255,.1);margin:.6rem 0}
+.mob-actions{display:flex;flex-direction:column;gap:.6rem;margin-top:.5rem}
+.dash-mob-header{display:none;position:sticky;top:0;z-index:100;background:var(--navy);padding:.7rem 1.1rem;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.1)}
+
+/* TUTOR SESSION CARDS */
+.tsess-card{background:#fff;border-radius:var(--r);border:1.5px solid var(--border);padding:1.15rem 1.25rem;margin-bottom:.85rem;transition:all .2s}
+.tsess-card:hover{border-color:rgba(201,149,11,.4);box-shadow:0 4px 18px rgba(11,29,51,.09)}
+.btn-start{background:var(--teal);color:#fff;padding:.48rem 1.1rem;border-radius:7px;font-size:.8rem;font-weight:700;border:none;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn-start:hover{background:#0a5f48;transform:translateY(-1px)}
+.btn-reschedule{background:transparent;color:var(--navy);border:1.5px solid var(--border);padding:.46rem .9rem;border-radius:7px;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .18s;white-space:nowrap}
+.btn-reschedule:hover{border-color:var(--navy);background:rgba(11,29,51,.04)}
+.time-slots{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:1rem}
+.time-slot{padding:.55rem .4rem;border-radius:7px;border:1.5px solid var(--border);background:transparent;font-size:.78rem;font-weight:600;color:var(--text);cursor:pointer;text-align:center;transition:all .15s;font-family:'Outfit',sans-serif}
+.time-slot:hover{border-color:var(--navy);color:var(--navy)}
+.time-slot.sel{background:var(--navy);color:#fff;border-color:var(--navy)}
+.info-banner{border-radius:var(--r);padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;align-items:flex-start;gap:.75rem}
+.info-banner p{font-size:.83rem;line-height:1.6}
+.info-banner.teal{background:rgba(13,122,95,.06);border:1px solid rgba(13,122,95,.18)}
+.info-banner.teal p{color:var(--teal)}
+.info-banner.gold{background:rgba(201,149,11,.06);border:1px solid rgba(201,149,11,.18)}
+.info-banner.gold p{color:#8a6200}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .nav{padding:0 1.5rem}
+  .nav-links{display:none}
+  .nav-actions{display:none}
+  .ham{display:flex}
+  .hero{min-height:auto;padding:3.5rem 1.75rem 3rem}
+  .hero-stats{position:static;transform:none;flex-direction:row;flex-wrap:wrap;margin-top:2.5rem;gap:.75rem}
+  .stat-grid{grid-template-columns:repeat(2,1fr)}
+  .stat-grid-3{grid-template-columns:repeat(3,1fr)}
+  .crm-wrap{grid-template-columns:1fr}
+  .crm-detail{position:static}
+  .pipeline{grid-template-columns:repeat(2,1fr)}
+  .contact-wrap{grid-template-columns:1fr}
+  .fg{grid-template-columns:1fr 1fr}
+  .feat-grid{grid-template-columns:repeat(2,1fr)}
+  .dc{padding:1.5rem}
+  .dh{padding:1rem 1.5rem}
+}
+@media(max-width:680px){
+  .nav{padding:0 1.1rem;height:56px}
+  .mob-menu{top:56px}
+  .dash-wrap{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .dash-mob-header{display:flex!important}
+  .hero{padding:2.5rem 1.25rem 2.5rem}
+  .hero h1{font-size:2.2rem}
+  .hero-btns{flex-direction:column}
+  .hero-btns .btn-p,.hero-btns .btn-s{width:100%;text-align:center}
+  .hero-stats{flex-wrap:wrap;gap:.6rem}
+  .hstat{flex:1;min-width:calc(50% - .35rem);padding:.85rem 1rem}
+  .hstat-n{font-size:1.8rem}
+  .stat-grid{grid-template-columns:1fr 1fr}
+  .stat-grid-3{grid-template-columns:1fr 1fr}
+  .dc{padding:1rem}
+  .dh{padding:.85rem 1rem;flex-wrap:wrap}
+  .card-h{padding:.85rem 1rem;flex-wrap:wrap;gap:.5rem}
+  .card-b{padding:1rem}
+  .mfrow{grid-template-columns:1fr}
+  .auth-card{padding:1.75rem 1.25rem}
+  .auth-page{padding:1rem}
+  .pipeline{grid-template-columns:1fr}
+  .time-slots{grid-template-columns:repeat(2,1fr)}
+  .feat-sec{padding:3rem 1.25rem}
+  .feat-grid{grid-template-columns:1fr}
+  .footer{padding:3rem 1.25rem 1.5rem}
+  .fg{grid-template-columns:1fr}
+  .fb{flex-direction:column;align-items:flex-start}
+  .frow{grid-template-columns:1fr}
+  .contact-wrap{grid-template-columns:1fr}
+  .attend-toggle-row{flex-direction:column;align-items:flex-start;gap:.65rem}
+  .toggle-group{flex-wrap:wrap}
+}
+@media(max-width:420px){
+  .stat-grid{grid-template-columns:1fr}
+  .stat-grid-3{grid-template-columns:1fr}
+  .hstat{min-width:100%}
+}
 `;
 
 // ─── helpers ───────────────────────────────────────────────
@@ -545,39 +638,54 @@ function AddStudentModal({onClose,onAdd}) {
 }
 
 // ─── navbar ────────────────────────────────────────────────
-function Navbar({page,nav,user,onLogout,setShowLogin}) {
-  if(user?.type==="student") return (
-    <nav className="nav">
-      <div className="nav-logo" onClick={()=>nav("sdash")}>Tutor<span>ific</span></div>
-      <div className="nav-links">{[["sdash","Dashboard"],["slessons","My Lessons"],["smaterials","Materials"]].map(([p,l])=><span key={p} className={`nav-link${page===p?" act":""}`} onClick={()=>nav(p)}>{l}</span>)}</div>
-      <div className="nav-actions"><span style={{color:"rgba(255,255,255,.5)",fontSize:".8rem"}}>👋 {user.name}</span><button className="btn-out" onClick={onLogout}>Sign Out</button></div>
-    </nav>
+function MobDashHeader({user,onLogout,links,page,nav}) {
+  const [open,setOpen]=useState(false);
+  return(
+    <div className="dash-mob-header">
+      <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"1.35rem",color:"#fff",fontWeight:600}}>Tutor<span style={{color:"var(--gold2)"}}>ific</span></div>
+      <button onClick={()=>setOpen(o=>!o)} className={`ham${open?" open":""}`}><span/><span/><span/></button>
+      {open&&<div style={{position:"fixed",top:50,left:0,right:0,bottom:0,background:"var(--navy)",zIndex:190,padding:"1.5rem 1.75rem",display:"flex",flexDirection:"column",gap:".15rem",overflowY:"auto"}}>
+        {links.map(l=><div key={l.p} className={`mob-link${page===l.p?" act":""}`} onClick={()=>{nav(l.p);setOpen(false);}}>{l.icon} {l.label}</div>)}
+        <div className="mob-divider"/>
+        <div style={{fontSize:".82rem",color:"rgba(255,255,255,.45)",padding:".5rem 0"}}>{user.name}</div>
+        <button className="btn-out" style={{width:"100%",padding:".7rem",textAlign:"center"}} onClick={()=>{onLogout();setOpen(false);}}>Sign Out</button>
+      </div>}
+    </div>
   );
-  if(user?.type==="admin") return (
+}
+
+function Navbar({page,nav,user,onLogout,setShowLogin,menuOpen,setMenuOpen}) {
+  const pubLinks=[["home","Home"],["courses","Courses"],["about","About"],["pricing","Pricing"],["contact","Contact"]];
+  const stdLinks=[["sdash","Dashboard"],["slessons","My Lessons"],["smaterials","Materials"]];
+  const tutLinks=[["tdash","Dashboard"],["tsessions","My Sessions"],["tattend","Attendance"],["tearnings","Earnings"]];
+  const admLinks=[["adash","Overview"],["aStudents","Students"],["acrm","CRM"],["aattend","Attendance"],["apayments","Payments"],["atutors","Tutors"]];
+  const links=user?.type==="student"?stdLinks:user?.type==="tutor"?tutLinks:user?.type==="admin"?admLinks:pubLinks;
+  const homeP=user?.type==="student"?"sdash":user?.type==="tutor"?"tdash":user?.type==="admin"?"adash":"home";
+  return(<>
     <nav className="nav">
-      <div className="nav-logo" onClick={()=>nav("adash")}>Tutor<span>ific</span></div>
-      <div className="nav-links">{[["adash","Overview"],["aStudents","Students"],["acrm","CRM"],["aattend","Attendance"],["apayments","Payments"],["atutors","Tutors"]].map(([p,l])=><span key={p} className={`nav-link${page===p?" act":""}`} onClick={()=>nav(p)}>{l}</span>)}</div>
-      <div className="nav-actions"><span style={{color:"rgba(255,255,255,.5)",fontSize:".8rem"}}>🔐 Admin</span><button className="btn-out" onClick={onLogout}>Sign Out</button></div>
-    </nav>
-  );
-  if(user?.type==="tutor") return (
-    <nav className="nav">
-      <div className="nav-logo" onClick={()=>nav("tdash")}>Tutor<span>ific</span></div>
-      <div className="nav-links">{[["tdash","My Dashboard"],["tattend","Mark Attendance"]].map(([p,l])=><span key={p} className={`nav-link${page===p?" act":""}`} onClick={()=>nav(p)}>{l}</span>)}</div>
-      <div className="nav-actions"><span style={{color:"rgba(255,255,255,.5)",fontSize:".8rem"}}>👩‍🏫 {user.name}</span><button className="btn-out" onClick={onLogout}>Sign Out</button></div>
-    </nav>
-  );
-  return (
-    <nav className="nav">
-      <div className="nav-logo" onClick={()=>nav("home")}>Tutor<span>ific</span></div>
-      <div className="nav-links">{[["home","Home"],["courses","Courses"],["about","About"],["pricing","Pricing"],["contact","Contact"]].map(([p,l])=><span key={p} className={`nav-link${page===p?" act":""}`} onClick={()=>nav(p)}>{l}</span>)}</div>
+      <div className="nav-logo" onClick={()=>nav(homeP)}>Tutor<span>ific</span></div>
+      <div className="nav-links">{links.map(([p,l])=><span key={p} className={`nav-link${page===p?" act":""}`} onClick={()=>nav(p)}>{l}</span>)}</div>
       <div className="nav-actions">
-        <button className="btn-out" onClick={()=>setShowLogin("student")}>Student Login</button>
-        <button className="btn-out" style={{borderColor:"rgba(13,122,95,.5)",color:"rgba(13,122,95,.9)"}} onClick={()=>setShowLogin("tutor")}>Tutor Login</button>
-        <button className="btn-gold" onClick={()=>setShowLogin("admin")}>Admin</button>
+        {!user?<>
+          <button className="btn-out" onClick={()=>setShowLogin("student")}>Student Login</button>
+          <button className="btn-out" style={{borderColor:"rgba(13,122,95,.5)",color:"rgba(13,122,95,.9)"}} onClick={()=>setShowLogin("tutor")}>Tutor Login</button>
+          <button className="btn-gold" onClick={()=>setShowLogin("admin")}>Admin</button>
+        </>:<><span style={{color:"rgba(255,255,255,.5)",fontSize:".8rem"}}>{user.type==="tutor"?"👩‍🏫":user.type==="admin"?"🔐":"👋"} {user.name}</span><button className="btn-out" onClick={onLogout}>Sign Out</button></>}
       </div>
+      <button className={`ham${menuOpen?" open":""}`} onClick={()=>setMenuOpen(o=>!o)}><span/><span/><span/></button>
     </nav>
-  );
+    <div className={`mob-menu${menuOpen?" open":""}`}>
+      {links.map(([p,l])=><div key={p} className={`mob-link${page===p?" act":""}`} onClick={()=>{nav(p);setMenuOpen(false);}}>{l}</div>)}
+      <div className="mob-divider"/>
+      <div className="mob-actions">
+        {!user?<>
+          <button className="btn-out" style={{width:"100%",padding:".7rem"}} onClick={()=>{setShowLogin("student");setMenuOpen(false);}}>Student Login</button>
+          <button className="btn-out" style={{width:"100%",padding:".7rem",borderColor:"rgba(13,122,95,.5)",color:"rgba(13,122,95,.9)"}} onClick={()=>{setShowLogin("tutor");setMenuOpen(false);}}>Tutor Login</button>
+          <button className="btn-gold" style={{width:"100%",padding:".7rem"}} onClick={()=>{setShowLogin("admin");setMenuOpen(false);}}>Admin</button>
+        </>:<><div style={{fontSize:".82rem",color:"rgba(255,255,255,.45)",marginBottom:".5rem"}}>{user.name}</div><button className="btn-out" style={{width:"100%",padding:".7rem"}} onClick={()=>{onLogout();setMenuOpen(false);}}>Sign Out</button></>}
+      </div>
+    </div>
+  </>);
 }
 
 // ─── footer ────────────────────────────────────────────────
@@ -733,12 +841,12 @@ function StudentDash({page,nav,user,onLogout,sessions,onJoin}) {
     <div className="sidebar">
       <div className="sb-logo">Tutor<span>ific</span></div>
       <div className="sb-nav"><div className="sb-sec">Student Portal</div>
-        {[{icon:"🏠",label:"Dashboard",p:"sdash"},{icon:"📅",label:"My Lessons",p:"slessons"},{icon:"📚",label:"Materials",p:"smaterials"}].map(s=><div key={s.p} className={`sb-link${page===s.p?" act":""}`} onClick={()=>nav(s.p)}><span style={{fontSize:"1rem"}}>{s.icon}</span>{s.label}</div>)}
+        {[{icon:"🏠",label:"Dashboard",p:"sdash"},{icon:"📅",label:"My Lessons",p:"slessons"},{icon:"🧠",label:"AI Practice",p:"squizzes"},{icon:"📊",label:"My Progress",p:"smastery"},{icon:"📚",label:"Materials",p:"smaterials"}].map(s=><div key={s.p} className={`sb-link${page===s.p?" act":""}`} onClick={()=>nav(s.p)}><span style={{fontSize:"1rem"}}>{s.icon}</span>{s.label}</div>)}
       </div>
       <div className="sb-bottom"><div className="sb-user"><div className="sb-avatar">{initials(user.name)}</div><div><div className="sb-name">{user.name}</div><div className="sb-role">Year 11 Student</div></div></div><div className="sb-link" style={{marginTop:".5rem"}} onClick={onLogout}><span>🚪</span>Sign Out</div></div>
     </div>
     <div className="dm">
-      <div className="dh"><div><h2>{page==="sdash"?"Welcome back, Emma":page==="slessons"?"My Upcoming Lessons":"Revision Materials"}</h2><div className="date">Friday, 19 March 2026</div></div></div>
+      <div className="dh"><div><h2>{page==="sdash"?"Welcome back, Emma":page==="slessons"?"My Upcoming Lessons":page==="squizzes"?"AI Practice":page==="smastery"?"My Progress":"Revision Materials"}</h2><div className="date">Friday, 19 March 2026</div></div>{page==="squizzes"&&<span style={{background:"rgba(13,122,95,.1)",color:"var(--teal)",borderRadius:"100px",padding:".25rem .85rem",fontSize:".78rem",fontWeight:700}}>Powered by AI 🤖</span>}</div>
       <div className="dc">
         {page==="sdash"&&<>
           <div className="stat-grid">{[{l:"Upcoming Lessons",v:mySessions.filter(s=>!s.attendState).length,h:"Remaining",c:"hint"},{l:"Materials Available",v:"13",h:"3 new this week",c:"hint"},{l:"Sessions Attended",v:mySessions.filter(s=>s.attendState==="P").length,h:"Auto-tracked",c:"hint"},{l:"Next Lesson",v:"Sat 15",h:"3:00 PM — Maths",c:"hinta"}].map(s=><div className="sb2" key={s.l}><div className="lbl">{s.l}</div><div className="val">{s.v}</div><div className={s.c}>{s.h}</div></div>)}</div>
@@ -752,6 +860,14 @@ function StudentDash({page,nav,user,onLogout,sessions,onJoin}) {
           <div style={{marginBottom:"1.25rem",padding:"1rem",background:"var(--teal2)",borderRadius:"var(--r)",border:"1px solid rgba(13,122,95,.15)"}}><p style={{fontSize:".83rem",color:"var(--teal)",lineHeight:1.65}}><span className="live-dot" style={{marginRight:6}}></span><strong>Attendance auto-tracked</strong> — clicking Join Session marks you present instantly.</p></div>
           {mySessions.map(l=><div className="lr" key={l.id} style={{padding:"1.25rem 0"}}><div className="ldate"><div className="d">{l.date}</div><div className="m">{l.month}</div></div><div className="li2"><div className="t" style={{fontSize:"1rem"}}>{l.subj} — {l.topic}</div><div className="m2" style={{marginTop:".35rem"}}>{l.time} · {l.tutor}</div></div><div style={{textAlign:"right"}}>{l.attendState==="P"?<div style={{fontSize:".8rem",color:"var(--teal)",fontWeight:700}}>✓ Attended · {l.joinedAt}</div>:<><button className="btn-meet" style={{padding:".5rem 1.25rem",fontSize:".85rem"}} onClick={()=>handleJoin(l)}>Join Session →</button><div style={{fontSize:".72rem",color:"var(--muted)",marginTop:".35rem"}}>Auto-logs attendance</div></>}</div></div>)}
         </div></div>}
+        {page==="squizzes"&&<>
+          <div className="info-banner teal" style={{marginBottom:"1.5rem"}}><span>🤖</span><p>These quizzes are generated from <strong>your actual lesson transcripts</strong> and triggered automatically when the AI detects a topic you need to practise.</p></div>
+          <div className="card"><div className="card-h"><h3>Your Practice Quizzes</h3></div><div className="card-b"><QuizRunner studentId="student-emma-id" onComplete={(r)=>console.log("Quiz done",r)}/></div></div>
+        </>}
+        {page==="smastery"&&<>
+          <div className="info-banner gold" style={{marginBottom:"1.5rem"}}><span>📊</span><p>Your mastery and retention scores are updated every time you complete a quiz. The <strong>decay bar</strong> shows how much you're retaining over time.</p></div>
+          <div className="card"><div className="card-h"><h3>Topic Mastery</h3></div><div className="card-b"><MasteryPanel studentId="student-emma-id"/></div></div>
+        </>}
         {page==="smaterials"&&<>
           <div className="tabs">{Object.keys(MATERIALS).map(t=><button key={t} className={`tab${matTab===t?" act":""}`} onClick={()=>setMatTab(t)}>{t}</button>)}</div>
           <div className="card"><div className="card-h"><h3>{matTab} — Revision Library</h3></div><div className="card-b">{MATERIALS[matTab].map(m=><div className="mr" key={m.name}><div className={`fic ic-${m.type.toLowerCase()}`}>{m.type}</div><div className="mi"><div className="n">{m.name}</div><div className="m">{m.size} · {m.added}</div></div><button className="btn-dl" onClick={()=>alert("File download — connect to your storage in production.")}>↓ Download</button></div>)}</div></div>
@@ -762,6 +878,50 @@ function StudentDash({page,nav,user,onLogout,sessions,onJoin}) {
 }
 
 // ─── TUTOR DASHBOARD ───────────────────────────────────────
+// ─── Reschedule Modal ──────────────────────────────────────
+function RescheduleModal({session,onClose,onConfirm}) {
+  const [newDate,setNewDate]=useState("");
+  const [newTime,setNewTime]=useState("");
+  const [reason,setReason]=useState("");
+  const [done,setDone]=useState(false);
+  const slots=["09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00"];
+  const handleConfirm=()=>{
+    if(!newDate||!newTime){alert("Please pick a date and time.");return;}
+    onConfirm(session.id,newDate,newTime,reason);setDone(true);
+  };
+  return(
+    <div className="modal-bg fade" onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div className="modal">
+        {done?(
+          <div style={{textAlign:"center",padding:"1rem 0"}}>
+            <div style={{fontSize:"2.2rem",marginBottom:"1rem"}}>✅</div>
+            <h3 style={{marginBottom:".5rem"}}>Session Rescheduled</h3>
+            <p style={{color:"var(--muted)",fontSize:".85rem",marginBottom:"1.5rem"}}>{session.studentName}'s session moved to {newDate} at {newTime}. Student and parent have been notified.</p>
+            <button className="btn-p" style={{width:"100%"}} onClick={onClose}>Done</button>
+          </div>
+        ):(
+          <>
+            <h3>Reschedule Session</h3>
+            <p className="sub">{session.studentName} · {session.subj} — {session.topic}<br/>Currently: {session.date} {session.month} at {session.time}</p>
+            <label className="mfl">New Date</label>
+            <input type="date" className="mfi" value={newDate} onChange={e=>setNewDate(e.target.value)}/>
+            <label className="mfl" style={{marginBottom:".6rem"}}>New Time</label>
+            <div className="time-slots">
+              {slots.map(t=><button key={t} className={`time-slot${newTime===t?" sel":""}`} onClick={()=>setNewTime(t)}>{t}</button>)}
+            </div>
+            <label className="mfl">Reason (optional)</label>
+            <textarea className="mfi" rows={2} placeholder="e.g. Tutor unavailable, student request..." value={reason} onChange={e=>setReason(e.target.value)} style={{resize:"none"}}/>
+            <div style={{display:"flex",gap:".75rem",marginTop:".5rem"}}>
+              <button onClick={onClose} style={{flex:1,padding:".8rem",borderRadius:8,border:"1.5px solid var(--border)",background:"transparent",cursor:"pointer",fontFamily:"'Outfit',sans-serif",fontWeight:600}}>Cancel</button>
+              <button onClick={handleConfirm} className="btn-p" style={{flex:2,padding:".8rem"}}>Confirm Reschedule</button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function TutorDash({page, nav, user, onLogout, sessions, setSessions, tutorPayments}) {
   const mySessions = sessions.filter(s => s.tutorId === user.tutorId);
   const myPayments = tutorPayments[user.tutorId] || [];
@@ -815,15 +975,31 @@ function TutorDash({page, nav, user, onLogout, sessions, setSessions, tutorPayme
   const dotClass = s => s==="P"?"ap":s==="A"?"aa":s==="L"?"al":"an";
   const dotLabel = s => s==="P"?"Present":s==="A"?"Absent":s==="L"?"Late":"—";
 
+  const [rescheduleSess, setRescheduleSess] = useState(null);
+
+  const handleJoinSession = s => {
+    setSessions(prev=>prev.map(sess=>sess.id===s.id?{...sess,attendState:"P",joinedAt:nowTime()}:sess));
+    window.open(s.meet,"_blank");
+  };
+
+  const handleReschedule = (sessionId, newDate, newTime, reason) => {
+    const [,month,day]=newDate.split("-");
+    const mns=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    setSessions(prev=>prev.map(s=>s.id===sessionId?{...s,date:day,month:mns[parseInt(month)-1],time:newTime,rescheduled:true,rescheduleReason:reason}:s));
+  };
+
   const sidebarLinks = [
     {icon:"📊",label:"My Dashboard",p:"tdash"},
+    {icon:"📅",label:"My Sessions",p:"tsessions"},
     {icon:"✅",label:"Mark Attendance",p:"tattend"},
+    {icon:"💰",label:"Earnings",p:"tearnings"},
   ];
 
-  const pageTitle = page === "tdash" ? "My Dashboard" : "Mark Attendance";
+  const pageTitle = {tdash:"My Dashboard",tsessions:"My Sessions",tattend:"Mark Attendance",tearnings:"My Earnings"}[page]||"Tutor Portal";
 
   return (
     <div className="dash-wrap">
+      <MobDashHeader user={user} onLogout={onLogout} links={sidebarLinks} page={page} nav={nav}/>
       <div className="sidebar">
         <div className="sb-logo">Tutor<span>ific</span></div>
         <div className="sb-nav">
@@ -847,6 +1023,7 @@ function TutorDash({page, nav, user, onLogout, sessions, setSessions, tutorPayme
         <div className="dh">
           <div><h2>{pageTitle}</h2><div className="date">Friday, 19 March 2026</div></div>
           {page==="tdash" && <span style={{fontSize:".8rem",color:"var(--muted)"}}>£{rate}/hr · {mySessions.length} session{mySessions.length!==1?"s":""} this month</span>}
+          {page==="tsessions" && <span style={{background:"rgba(13,122,95,.1)",color:"var(--teal)",borderRadius:"100px",padding:".25rem .85rem",fontSize:".78rem",fontWeight:700}}>{mySessions.filter(s=>!s.attendState).length} upcoming</span>}
         </div>
 
         <div className="dc">
@@ -1045,13 +1222,102 @@ function TutorDash({page, nav, user, onLogout, sessions, setSessions, tutorPayme
             </div>
           </>}
 
+          {/* ── MY SESSIONS PAGE ── */}
+          {page==="tsessions" && <>
+            <div className="info-banner teal">
+              <span style={{fontSize:"1.1rem"}}>📅</span>
+              <p><strong>▶ Start Session</strong> opens your Meet link and auto-marks you present. <strong>Reschedule</strong> moves the session to a new slot. After each session, upload the recording and submit a recap to trigger AI quizzes for your student.</p>
+            </div>
+            {mySessions.filter(s=>!s.attendState).length>0&&<>
+              <div style={{fontWeight:700,fontSize:".78rem",letterSpacing:".1em",textTransform:"uppercase",color:"var(--muted)",marginBottom:".85rem"}}>Upcoming</div>
+              {mySessions.filter(s=>!s.attendState).map(s=>(
+                <div key={s.id} className="tsess-card">
+                  <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:"1rem",marginBottom:".75rem",flexWrap:"wrap"}}>
+                    <div>
+                      <div style={{fontWeight:600,fontSize:".95rem"}}>{s.studentName} · {s.subj}</div>
+                      <div style={{fontSize:".78rem",color:"var(--muted)",marginTop:".2rem"}}>{s.date} {s.month} · {s.time} · {s.durationHours}h · {s.topic}{s.rescheduled?" · 🔄 Rescheduled":""}</div>
+                      {s.rescheduled&&s.rescheduleReason&&<div style={{fontSize:".75rem",color:"var(--muted)",marginTop:".1rem"}}>Reason: {s.rescheduleReason}</div>}
+                    </div>
+                    <div style={{display:"flex",gap:".5rem",flexWrap:"wrap"}}>
+                      <button className="btn-start" onClick={()=>handleJoinSession(s)}>▶ Start Session</button>
+                      <button className="btn-reschedule" onClick={()=>setRescheduleSess(s)}>🔄 Reschedule</button>
+                    </div>
+                  </div>
+                  <div style={{fontSize:".75rem",color:"var(--muted)"}}>Meet: <a href={s.meet} target="_blank" rel="noreferrer" style={{color:"var(--teal)",fontWeight:600}}>{s.meet}</a></div>
+                </div>
+              ))}
+            </>}
+            {mySessions.filter(s=>s.attendState).length>0&&<>
+              <div style={{fontWeight:700,fontSize:".78rem",letterSpacing:".1em",textTransform:"uppercase",color:"var(--muted)",margin:"1.5rem 0 .85rem"}}>Completed</div>
+              {mySessions.filter(s=>s.attendState).map(s=>(
+                <div key={s.id} className="tsess-card" style={{opacity:.82}}>
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"1rem",flexWrap:"wrap"}}>
+                    <div>
+                      <div style={{fontWeight:600,fontSize:".92rem"}}>{s.studentName} · {s.subj}</div>
+                      <div style={{fontSize:".78rem",color:"var(--muted)",marginTop:".2rem"}}>{s.date} {s.month} · {s.time} · {s.topic}</div>
+                    </div>
+                    <div style={{display:"flex",gap:".6rem",alignItems:"center"}}>
+                      <span className={`adot ${dotClass(s.attendState)}`} title={dotLabel(s.attendState)}>{s.attendState}</span>
+                      {(s.attendState==="P"||s.attendState==="L")&&<span style={{fontSize:".78rem",color:"var(--teal)",fontWeight:700}}>{fmtGBP((s.durationHours||1)*rate)}</span>}
+                    </div>
+                  </div>
+                  {s.joinedAt&&<div style={{fontSize:".75rem",color:"var(--muted)",marginTop:".35rem"}}>Joined at {s.joinedAt}</div>}
+                  {/* AI post-lesson tools */}
+                  <div style={{marginTop:"1rem",display:"grid",gridTemplateColumns:"1fr 1fr",gap:"1rem"}}>
+                    <div style={{background:"var(--bg)",borderRadius:"var(--r)",padding:"1rem",border:"1px solid var(--border)"}}>
+                      <div style={{fontSize:".75rem",fontWeight:700,color:"var(--muted)",textTransform:"uppercase",letterSpacing:".08em",marginBottom:".75rem"}}>📝 Post-Lesson Recap</div>
+                      <TutorRecapForm session={s} user={user} onComplete={r=>console.log("Recap done",r)}/>
+                    </div>
+                    <div style={{background:"var(--bg)",borderRadius:"var(--r)",padding:"1rem",border:"1px solid var(--border)"}}>
+                      <div style={{fontSize:".75rem",fontWeight:700,color:"var(--muted)",textTransform:"uppercase",letterSpacing:".08em",marginBottom:".75rem"}}>🎙️ Upload Recording</div>
+                      <AudioUploader session={s} onDone={s=>console.log("Upload done",s)}/>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </>}
+            {mySessions.length===0&&<div style={{textAlign:"center",padding:"3rem",color:"var(--muted)"}}><div style={{fontSize:"2.5rem",marginBottom:"1rem"}}>📅</div><p>No sessions assigned yet.</p></div>}
+          </>}
+
+          {/* ── EARNINGS PAGE ── */}
+          {page==="tearnings" && <>
+            <div className="stat-grid-3" style={{marginBottom:"2rem"}}>
+              <div className="earn-card green"><div style={{fontSize:".72rem",color:"var(--muted)",fontWeight:600,letterSpacing:".08em",textTransform:"uppercase",marginBottom:".45rem"}}>Total Earned</div><div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2.1rem",color:"var(--teal)",fontWeight:600,lineHeight:1}}>{fmtGBP(totalEarned)}</div><div style={{fontSize:".75rem",color:"var(--muted)",marginTop:".35rem"}}>attended sessions · £{rate}/hr</div></div>
+              <div className="earn-card gold"><div style={{fontSize:".72rem",color:"var(--muted)",fontWeight:600,letterSpacing:".08em",textTransform:"uppercase",marginBottom:".45rem"}}>Paid Out</div><div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2.1rem",color:"var(--gold)",fontWeight:600,lineHeight:1}}>{fmtGBP(totalPaid)}</div><div style={{fontSize:".75rem",color:"var(--muted)",marginTop:".35rem"}}>{myPayments.filter(p=>p.status==="Paid").length} payments received</div></div>
+              <div className="earn-card navy"><div style={{fontSize:".72rem",color:"var(--muted)",fontWeight:600,letterSpacing:".08em",textTransform:"uppercase",marginBottom:".45rem"}}>Outstanding</div><div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2.1rem",color:outstanding>0?"var(--navy)":"var(--teal)",fontWeight:600,lineHeight:1}}>{fmtGBP(outstanding)}</div><div style={{fontSize:".75rem",color:outstanding>0?"var(--gold)":"var(--teal)",marginTop:".35rem"}}>{outstanding>0?"awaiting payment":"all up to date ✓"}</div></div>
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"1.4fr 1fr",gap:"1.5rem"}}>
+              <div className="card" style={{marginBottom:0}}>
+                <div className="card-h"><h3>Session History</h3></div>
+                <div className="tbl-wrap"><table>
+                  <thead><tr><th>Date</th><th>Student</th><th>Subject</th><th>Dur.</th><th>Att.</th><th>Earnings</th></tr></thead>
+                  <tbody>
+                    {mySessions.length===0&&<tr><td colSpan={6} style={{textAlign:"center",color:"var(--muted)",padding:"2rem"}}>No sessions yet.</td></tr>}
+                    {mySessions.map(s=>{const amt=(s.attendState==="P"||s.attendState==="L")?(s.durationHours||1)*rate:0;return <tr key={s.id}><td>{s.date} {s.month}</td><td style={{fontWeight:600}}>{s.studentName}</td><td>{s.subj}</td><td>{s.durationHours||1}h</td><td>{s.attendState?<span className={`adot ${dotClass(s.attendState)}`}>{s.attendState}</span>:<span style={{color:"var(--muted)",fontSize:".75rem"}}>—</span>}</td><td style={{fontWeight:600,color:amt>0?"var(--teal)":"var(--muted)"}}>{amt>0?fmtGBP(amt):"—"}</td></tr>;})}
+                  </tbody>
+                </table></div>
+              </div>
+              <div className="card" style={{marginBottom:0}}>
+                <div className="card-h"><h3>Payment History</h3></div>
+                <div style={{padding:"0 1.4rem"}}>
+                  {myPayments.length===0&&<p style={{color:"var(--muted)",padding:"2rem 0",textAlign:"center",fontSize:".85rem"}}>No records yet.</p>}
+                  {myPayments.map((p,i)=>(
+                    <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:".85rem 0",borderBottom:"1px solid var(--border)"}}>
+                      <div><div style={{fontWeight:600,fontSize:".88rem"}}>{p.month}</div><div style={{fontSize:".77rem",color:"var(--muted)"}}>{p.sessions} sessions</div></div>
+                      <div style={{textAlign:"right"}}><div style={{fontWeight:700,fontFamily:"'Cormorant Garamond',serif"}}>£{p.invoiced}</div><span className={`badge b-${p.status==="Paid"?"green":"amber"}`}>{p.status}</span></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </>}
+
         </div>
       </div>
+      {rescheduleSess&&<RescheduleModal session={rescheduleSess} onClose={()=>setRescheduleSess(null)} onConfirm={(id,d,t,r)=>{handleReschedule(id,d,t,r);setRescheduleSess(null);}}/>}
     </div>
   );
 }
-
-// ─── admin dashboard (unchanged except atutors now uses tutorPayments state) ─
 function AdminDash({page,nav,onLogout,students,setStudents,payments,setPayments,sessions,setSessions,leads,setLeads,showAdd,setShowAdd,tutorPayments,setTutorPayments}) {
   const totalRevenue=payments.filter(p=>p.status==="Paid").reduce((a,p)=>a+p.amount,0);
   const outstanding=payments.filter(p=>p.status!=="Paid").reduce((a,p)=>a+p.amount,0);
@@ -1115,7 +1381,7 @@ function AdminDash({page,nav,onLogout,students,setStudents,payments,setPayments,
 
         {page==="aStudents"&&<>
           <div style={{background:"rgba(201,149,11,.06)",border:"1px solid rgba(201,149,11,.18)",borderRadius:"var(--r)",padding:"1rem 1.25rem",marginBottom:"1.75rem",display:"flex",alignItems:"center",gap:".75rem"}}><span style={{fontSize:"1.1rem"}}>🔑</span><p style={{fontSize:".83rem",color:"var(--gold)",lineHeight:1.6}}>Adding a student generates a secure password and emails it to the parent immediately.</p></div>
-          <div className="card"><div className="card-h"><h3>All Students ({students.length})</h3></div><div style={{overflowX:"auto"}}><table><thead><tr><th>Student</th><th>Year</th><th>Subject</th><th>Tutor</th><th>Parent</th><th>Portal Email</th><th>Fee</th></tr></thead><tbody>{students.map(s=><tr key={s.id}><td style={{fontWeight:600}}>{s.name}</td><td>{s.year}</td><td>{s.subject}</td><td>{s.tutor}</td><td>{s.parent}</td><td style={{fontSize:".78rem",color:"var(--muted)",fontFamily:"monospace"}}>{s.email}</td><td style={{fontWeight:600}}>£{s.fee}/mo</td></tr>)}</tbody></table></div></div>
+          <div className="card"><div className="card-h"><h3>All Students ({students.length})</h3></div><div style={{overflowX:"auto"}}><table><thead><tr><th>Student</th><th>Year</th><th>Subject</th><th>Tutor</th><th>Parent</th><th>Portal Email</th><th>Fee</th><th>AI</th></tr></thead><tbody>{students.map(s=><tr key={s.id}><td style={{fontWeight:600}}>{s.name}</td><td>{s.year}</td><td>{s.subject}</td><td>{s.tutor}</td><td>{s.parent}</td><td style={{fontSize:".78rem",color:"var(--muted)",fontFamily:"monospace"}}>{s.email}</td><td style={{fontWeight:600}}>£{s.fee}/mo</td><td><AdminStudentAIPanel student={s}/></td></tr>)}</tbody></table></div></div>
         </>}
 
         {page==="acrm"&&<CRMPanel leads={leads} setLeads={setLeads} onConvertToStudent={handleConvertFromCRM}/>}
@@ -1170,23 +1436,24 @@ export default function App() {
   const [leads,setLeads]=useState(INIT_LEADS);
   const [showAdd,setShowAdd]=useState(false);
   const [tutorPayments,setTutorPayments]=useState(TUTOR_PAYMENTS_INIT);
+  const [menuOpen,setMenuOpen]=useState(false);
 
-  const nav=(p)=>{ setPage(p); setShowLogin(null); window.scrollTo(0,0); };
+  const nav=(p)=>{ setPage(p); setShowLogin(null); setMenuOpen(false); window.scrollTo(0,0); };
   const onLogin=(u)=>{ setUser(u); setShowLogin(null); if(u.type==="student") nav("sdash"); else if(u.type==="admin") nav("adash"); else nav("tdash"); };
   const onLogout=()=>{ setUser(null); nav("home"); };
   const handleJoin=(id)=>{ const t=nowTime(); setSessions(prev=>prev.map(s=>s.id===id?{...s,attendState:"P",joinedAt:t}:s)); };
 
-  const nb=<Navbar page={page} nav={nav} user={user} onLogout={onLogout} setShowLogin={setShowLogin}/>;
+  const nb=<Navbar page={page} nav={nav} user={user} onLogout={onLogout} setShowLogin={setShowLogin} menuOpen={menuOpen} setMenuOpen={setMenuOpen}/>;
 
   if(showLogin) return <><style>{CSS}</style>{nb}<LoginPage type={showLogin} onLogin={onLogin} nav={nav} tutors={TUTORS_AUTH}/></>;
 
-  if(user?.type==="student") return <><style>{CSS}</style>{nb}<StudentDash page={page} nav={nav} user={user} onLogout={onLogout} sessions={sessions} onJoin={handleJoin}/></>;
+  if(user?.type==="student") return <><style>{CSS}</style><StudentDash page={page} nav={nav} user={user} onLogout={onLogout} sessions={sessions} onJoin={handleJoin}/></>;
 
-  if(user?.type==="tutor") return <><style>{CSS}</style>{nb}
+  if(user?.type==="tutor") return <><style>{CSS}</style>
     <TutorDash page={page} nav={nav} user={user} onLogout={onLogout} sessions={sessions} setSessions={setSessions} tutorPayments={tutorPayments}/>
   </>;
 
-  if(user?.type==="admin") return <><style>{CSS}</style>{nb}
+  if(user?.type==="admin") return <><style>{CSS}</style>
     <AdminDash page={page} nav={nav} onLogout={onLogout} students={students} setStudents={setStudents} payments={payments} setPayments={setPayments} sessions={sessions} setSessions={setSessions} leads={leads} setLeads={setLeads} showAdd={showAdd} setShowAdd={setShowAdd} tutorPayments={tutorPayments} setTutorPayments={setTutorPayments}/>
   </>;
 
