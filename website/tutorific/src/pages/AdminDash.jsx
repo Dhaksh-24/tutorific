@@ -2,7 +2,7 @@ import { useState } from "react";
 import { MobDashHeader, AddStudentModal, ConfirmModal } from "../components/UI.jsx";
 import { AdminStudentAIPanel } from "../AIComponents.jsx";
 import {
-  initials, nowTime, daysSince, avatarColor,
+  initials, nowTime, daysSince, avatarColor, genPw, genEmail,
   TUTORS_AUTH, PAST_ATTEND,
   STAGE_ORDER, STAGE_COLORS, STAGE_DOTS,
 } from "../data.js";
@@ -55,15 +55,12 @@ function CRMPanel({ leads, setLeads, onConvert }) {
 
   const doConvert = () => {
     const l = confirm;
-    const { genPw, genEmail } = require ? {} : {}; // handled in data.js
-    import("../data.js").then(({genPw,genEmail})=>{
-      const pw=genPw(), email=genEmail(l.name);
-      const student={id:Date.now(),name:l.name,year:l.year||"Yr 10",subject:l.subject,tutor:"Mr. Ahmed",parent:l.parent,parentEmail:l.email,fee:120,email};
-      onConvert(student);
-      changeStage(l.id,"Active");
-      addTL(l.id,{type:"email",text:"Account created & credentials sent",detail:`Login: ${email} / ${pw}`,ts:ts()});
-      setConfirm(null);
-    });
+    const pw=genPw(), email=genEmail(l.name);
+    const student={id:Date.now(),name:l.name,year:l.year||"Yr 10",subject:l.subject,tutor:"Mr. Ahmed",parent:l.parent,parentEmail:l.email,fee:120,email};
+    onConvert(student);
+    changeStage(l.id,"Active");
+    addTL(l.id,{type:"email",text:"Account created & credentials sent",detail:`Login: ${email} / ${pw}`,ts:ts()});
+    setConfirm(null);
   };
 
   const tIC = t=>t==="note"?"tl-note":t==="email"?"tl-email":t==="stage"?"tl-stage":t==="remind"?"tl-remind":"tl-enq";
